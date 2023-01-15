@@ -1,0 +1,39 @@
+.idea
+
+#logs
+logs
+*.log
+npm-debug.log*
+
+# dependency directory
+/node_modules
+/node_modules
+/.pnp
+/.pnp.js
+
+
+# optional npm cache directory
+.npm
+
+# optional REPL history
+.DS_Store
+.idea
+.vscode
+
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
