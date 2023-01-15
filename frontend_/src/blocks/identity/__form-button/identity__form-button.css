@@ -1,0 +1,34 @@
+.identity__form-button {
+  width: 100%;
+  height: 50px;
+  background-color: #ffffff;
+  border-radius: 2px;
+  margin: 186px auto 15px;
+
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+  text-align: center;
+  color: #000000;
+
+  transition: opacity 0.5s ease-in-out;
+}
+
+.identity__form-button:hover {
+  opacity: 0.85;
+  cursor: pointer;
+}
+
+.identity__form-button:disabled {
+  opacity: 0.5;
+}
+
+@media screen and (max-width: 768px) {
+  .identity__form-button {
+    margin: 142px auto 20px;
+    font-size: 16px;
+    line-height: 19px;
+  }
+}

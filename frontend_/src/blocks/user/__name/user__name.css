@@ -1,0 +1,21 @@
+.user__name {
+  width: 293px;
+  margin: 0;
+  padding: 0;
+  font-weight: 500;
+  font-size: 42px;
+  line-height: 114%;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+@media screen and (max-width: 768px) {
+  .user__name {
+    width: 190px;
+    text-align: center;
+    font-size: 27px;
+    line-height: 33px;
+  }
+}

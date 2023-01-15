@@ -1,0 +1,5 @@
+.popup__info-err {
+  background-image: url(../../../images/tooltip/err_tooltip.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+}

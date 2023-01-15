@@ -1,0 +1,20 @@
+.gallery__like-button {
+  padding: 0;
+  margin: 0;
+  min-width: 22px;
+  height: 19px;
+  border: none;
+  background-color: #ffffff;
+  background-image: url(../../../images/like/like-disabled.svg);
+  background-size: 100%;
+  background-repeat: no-repeat;
+  /* background-position: center; */
+  align-self: center;
+
+  transition: opacity 0.5s ease-in-out;
+}
+
+.gallery__like-button:hover {
+  opacity: 0.6;
+  cursor: pointer;
+}

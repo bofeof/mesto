@@ -1,0 +1,7 @@
+.gallery__like-container{
+  display: flex;
+  justify-content:space-between;
+  flex-direction: column;
+  align-items: center;
+  width: 22px;
+}

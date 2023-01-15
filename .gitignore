@@ -6,9 +6,9 @@ logs
 npm-debug.log*
 
 # dependency directory
-/node_modules
-/.pnp
-/.pnp.js
+node_modules
+.pnp
+.pnp.js
 
 
 # optional npm cache directory
@@ -20,7 +20,7 @@ npm-debug.log*
 .vscode
 
 # testing
-/coverage
+coverage
 
 # production
 # /build

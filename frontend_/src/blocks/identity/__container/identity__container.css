@@ -1,0 +1,16 @@
+.identity__container {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  max-width: 358px;
+  width: 358px;
+  margin: 20px auto 0;
+}
+
+@media screen and (max-width: 768px) {
+  .identity__container {
+    max-width: 260px;
+    width: 260px;
+    margin: 0 auto 0;
+  }
+}

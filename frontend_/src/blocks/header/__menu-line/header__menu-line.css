@@ -1,0 +1,7 @@
+.header__menu-line {
+  display: block;
+  width: 100%;
+  margin-bottom: 7px;
+  height: 3px;
+  background: white;
+}

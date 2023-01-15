@@ -1,0 +1,26 @@
+.gallery__remove-button {
+  padding: 0;
+  margin:0;
+  width: 18px;
+  height: 19px;
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+  background-image: url(../../../images/remove/remove.svg);
+
+  background-size: 18px 19px;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  transition: opacity 0.5s ease-in-out;
+
+  position: absolute;
+  right: 20px;
+  top: 20px;
+
+  filter: drop-shadow(1px 1px 1px rgb(0 0 0 / 0.2)); /* добавлена тень, иначе иконку не видно на светлом фоне */
+}
+
+.gallery__remove-button:hover {
+  opacity: 0.6;
+  cursor: pointer;
+}

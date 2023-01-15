@@ -1,0 +1,25 @@
+.header {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(1, 1fr);
+  grid-template-areas: "header__logo header__menu header__user";
+
+  min-height: 74px;
+  border-bottom: 1px solid rgba(84, 84, 84, 0.7);
+  margin-bottom: 40px;
+  box-sizing: border-box;
+}
+
+@media screen and (max-width: 768px) {
+  .header {
+    min-height: 56px;
+    margin-bottom: 38.25px;
+
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, auto);
+    grid-template-areas:
+      "header__user header__user"
+      "header__logo header__menu";
+  }
+}

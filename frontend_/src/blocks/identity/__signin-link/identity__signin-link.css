@@ -1,0 +1,10 @@
+.identity__signin-link {
+  text-decoration: none;
+  color: #ffffff;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.identity__signin-link:hover {
+  cursor: pointer;
+  opacity: 0.6;
+}

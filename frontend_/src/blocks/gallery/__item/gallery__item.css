@@ -1,0 +1,9 @@
+.gallery__item {
+  background: #ffffff;
+  border-radius: 10px;
+  max-height: 361px;
+  height: 361px;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}

@@ -1,0 +1,18 @@
+.identity__signin-ask {
+  width: 100%;
+  min-height: 17px;
+  margin: 0 auto 80px;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  text-align: center;
+  color: #ffffff;
+}
+
+@media screen and (max-width: 768px) {
+  .identity__signin-ask {
+    margin: 0 auto 40px;
+  }
+}

@@ -1,0 +1,10 @@
+.header__burger-close {
+  background-image: url(../../../images/close/close.svg);
+
+  background-size: contain;
+  background-position: center center;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}

@@ -1,0 +1,16 @@
+.page__not-found {
+  height: 65vh;
+  width: 100%;
+
+  margin: 10px auto 20px;
+  background-image: url(../../../images/page404/page404.svg);
+  background-size: contain;
+  background-position: center top;
+  background-repeat: no-repeat;
+}
+
+@media screen and (max-width: 768px) {
+  .page__not-found {
+    background-position: center center;
+  }
+}

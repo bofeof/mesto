@@ -1,0 +1,23 @@
+.header__menu {
+  visibility: hidden;
+  width: 24px;
+  height: 21px;
+  grid-area: header__menu;
+  align-self: top;
+
+  transition: opacity 0.5s ease-in-out;
+}
+
+.header__menu:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+  .header__menu {
+    visibility: visible;
+    justify-self: end;
+    margin-right: 30px;
+    margin-top: 4px;
+  }
+}

@@ -1,0 +1,5 @@
+.popup__info-ok {
+  background-image: url(../../../images/tooltip/ok_tooltip.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+}

@@ -1,0 +1,6 @@
+.header__menu_visible {
+  display: flex;
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 1s ease, opacity 0.6s ease;
+}

@@ -1,0 +1,11 @@
+.user__header {
+  display: flex;
+  align-items: flex-end;
+  margin: 22px 0 14px;
+}
+@media screen and (max-width: 768px) {
+  .user__header {
+    margin: 22.25px auto 14px;
+    padding-left: 28px;
+  }
+}

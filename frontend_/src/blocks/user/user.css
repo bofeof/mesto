@@ -1,0 +1,13 @@
+.user {
+  width: 100%;
+  display: flex;
+  margin: 0 auto 50px;
+}
+
+@media screen and (max-width: 768px) {
+  .user {
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto 36px;
+  }
+}

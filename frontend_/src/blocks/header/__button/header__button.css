@@ -1,0 +1,28 @@
+.header__button {
+  max-height: 22px;
+  width: auto;
+  padding: 0;
+  border: none;
+  background-color: #000000;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 122%;
+  text-align: right;
+  color: #ffffff;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.header__button:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+  .header__button {
+    margin: 0 30px 31.6px 0;
+    font-size: 14px;
+    line-height: 17px;
+  }
+}
