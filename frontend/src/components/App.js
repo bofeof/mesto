@@ -57,6 +57,13 @@ export default function App() {
     if (localStorage.getItem('mestoToken')) {
       checkToken(localStorage.getItem('mestoToken'))
         .then((res) => {
+          // if jwt secret key is changed by dev while user has active session
+          if(!res){
+            localStorage.clear();
+            setLoggedIn(false);
+            history.push('/sign-in');
+            return
+          }
           setLoginId(() => res.data._id);
           setLoginEmail(() => res.data.email);
           setLoggedIn(true);
@@ -71,6 +78,7 @@ export default function App() {
             .catch((err) => console.log(`Ошибка: ${err}`));
         })
         .catch((err) => {
+          localStorage.removeItem('mestoToken');
           setLoggedIn(false);
           console.log(err);
         });

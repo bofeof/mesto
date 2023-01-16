@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: '../.env' });
 const { errors, celebrate, Joi } = require('celebrate');
 const process = require('process');
 const express = require('express');
