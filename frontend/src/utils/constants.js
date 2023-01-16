@@ -1,5 +1,5 @@
 
-const REACT_APP_BASE_URL = process.env.NODE_ENV === 'production' ? 'http://localhost:3000' : 'http://localhost:3000';
+const REACT_APP_BASE_URL = 'http://localhost:3000';
 const configAPI = {
   mestoUrl: REACT_APP_BASE_URL,
   headers: {
