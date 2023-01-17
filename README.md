@@ -1,5 +1,5 @@
 # react-mesto-api-full
-Full description is under on construction
+Full description is under construction
 
 Link: https://bofeof.nomoredomains.club
 
