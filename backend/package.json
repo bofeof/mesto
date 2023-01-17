@@ -7,8 +7,7 @@
     "start": "node app.js",
     "dev": "cross-env NODE_ENV=development nodemon app.js",
     "lint": "npx eslint .",
-    "test": "jest",
-    "polina": "echo $x=$(123)"
+    "test": "jest"
   },
   "repository": {
     "type": "git",

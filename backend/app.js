@@ -1,4 +1,5 @@
 require('dotenv').config({ path: '../.env' });
+
 const { errors, celebrate, Joi } = require('celebrate');
 const process = require('process');
 const express = require('express');
@@ -9,12 +10,13 @@ const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const cors = require('cors');
 
-const { errorAnswers } = require('./utils/constants');
-
 const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const { PORT = 3000, NODE_ENV } = process.env;
+const { errorAnswers } = require('./utils/constants');
+
+const { PORT = 3000, NODE_ENV, MONGO_DB } = process.env;
+
 const app = express();
 
 const userRouter = require('./routes/users');
@@ -41,10 +43,13 @@ process.on('uncaughtException', (err, origin) => {
   console.log(`Непредвиденная ошибка! ${error.message}`);
 });
 
-mongoose.connect('mongodb://localhost:27017/mestodb');
+mongoose.connect(MONGO_DB);
 
 // cors
-app.use(cors());
+const corsOption = {
+  origin: '*',
+};
+app.use(cors(corsOption));
 
 // set lim of requests
 app.use(limiter);
@@ -57,7 +62,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(requestLogger);
 
-app.get('/crash-test', () => {
+app.get('/crash-test', cors(corsOption), () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
   }, 0);
@@ -65,6 +70,7 @@ app.get('/crash-test', () => {
 
 app.post(
   '/signin',
+  cors(corsOption),
   celebrate({
     body: Joi.object().keys({
       email: Joi.string().email().required(),
@@ -76,6 +82,7 @@ app.post(
 
 app.post(
   '/signup',
+  cors(corsOption),
   celebrate({
     body: Joi.object().keys({
       name: Joi.string().min(2).max(30),
