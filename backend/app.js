@@ -15,7 +15,7 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { errorAnswers } = require('./utils/constants');
 
-const { PORT = 3000, NODE_ENV, MONGO_DB } = process.env;
+const { MONGO_DB } = process.env;
 
 const app = express();
 
@@ -113,7 +113,4 @@ app.use((err, req, res, next) => {
   next();
 });
 
-app.listen(PORT, () => {
-  // eslint-disable-next-line no-console
-  console.log(`App listening on port ${PORT}. Environment: ${NODE_ENV}`);
-});
+module.exports = app;
