@@ -29,13 +29,20 @@ const invalidUserAvatar = {
 };
 
 // these data about user and card are for cards manipulation
-const currentUser = {
-  email: 'user@test.com',
-  password: '111111',
-};
-
 const newCard = {
   name: 'by user@test.com',
+  link: 'https://devhumor.com/content/uploads/images/June2022/learning_programming.jpg',
+};
+
+const anotherCardId = "63d42a090a2d97b7b5852d2c";
+
+const invalidNameNewCard = {
+  name: '',
+  link: 'https://devhumor.com/content/uploads/images/June2022/learning_programming.jpg',
+};
+
+const invalidLinkNewCard = {
+  name: 'by user@jest.com',
   link: 'https://devhumor.com/content/uploads/images/June2022/learning_programming.jpg',
 };
 
@@ -46,6 +53,8 @@ module.exports = {
   newUserAvatar,
   invalidUserInfo,
   invalidUserAvatar,
-  currentUser,
   newCard,
+  anotherCardId,
+  invalidNameNewCard,
+  invalidLinkNewCard,
 };

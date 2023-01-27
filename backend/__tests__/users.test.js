@@ -62,13 +62,14 @@ describe('All manipulation with user: creation, updating ect', () => {
       .send(newUser)
       .then((res) => {
         const message = JSON.parse(res.text);
+        // get token
         token = `Bearer ${message.token}`;
         expect(res.status).toBe(200);
         expect(token).toBeDefined();
       }));
   });
 
-  describe('User manipulation after sign in', () => {
+  describe('User manipulation after sign in (with token)', () => {
     describe('Get current user or user by Id after sign in', () => {
       it('Get user by id', () => {
         request
@@ -225,16 +226,22 @@ describe('All manipulation with user: creation, updating ect', () => {
       }));
   });
 
-  describe('Invalid url, request method', () => {
-    it('check invalid url or method, example 1', () => {
+  describe('Invalid url, request method, crash test', () => {
+    it('Check invalid url or method, example 1', () => {
       request.post('/users/me/aaa/xxx', (res) => {
         expect(res.status).toBe(404);
       });
     });
 
-    it('check invalid url or method, example 2', () => {
-      request.delete('/users/me/aaa/xxx', (res) => {
+    it('Check invalid url or method, example 2', () => {
+      request.delete('/users/e/aaa/xxx/123', (res) => {
         expect(res.status).toBe(404);
+      });
+    });
+
+    it('Crash test', () => {
+      request.delete('/crash-test', (res) => {
+        expect(res.status).toBe(500);
       });
     });
   });
