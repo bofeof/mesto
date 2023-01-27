@@ -7,7 +7,7 @@
     "start": "node app.js",
     "dev": "cross-env NODE_ENV=development nodemon server.js",
     "lint": "npx eslint .",
-    "test": "jest"
+    "test": "jest --verbose --forceExit --detectOpenHandles --watchAll --maxWorkers=2"
   },
   "repository": {
     "type": "git",
