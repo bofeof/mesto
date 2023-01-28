@@ -78,6 +78,7 @@ So, if you don't want to deploy this app locally you can also check frontend par
 * `npm run build` Builds the app for production to the `build` folder.
 * `npm run start` Run Mesto server. http://localhost:3000
 * `npm run dev` Run server with hot-reload (for dev purposes)
+* `npm run test` Jest request-tests for user and cards actions (for dev purposes). Test data is placed in ./backend/fixtures folder. Jest tests - ./backend/tests
 
 
 
