@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const User = require('../models/user');
 const {
   newUser,
+  invalidUserId,
   invalidNewUser,
   newUserInfo,
   newUserAvatar,
@@ -31,57 +32,69 @@ afterAll(() => {
 // TESTS
 describe('All manipulation with user: creation, updating ect', () => {
   describe('Craete new user and sign in, get token for next actions', () => {
-    it('Create user with invalid data, user doesnt exist', () => request
-      .post('/signup')
-      .send(invalidNewUser)
-      .then((res) => {
-        const message = JSON.parse(res.text);
-        expect(res.status).toBe(400);
-        expect(message).toBeDefined();
-        expect(message.message).toBe('Validation failed');
-        // joi message example
-        expect(message.validation.body.message).toBe('"email" must be a valid email');
-      }));
+    it('Create user with invalid data, user doesnt exist', () =>
+      request
+        .post('/signup')
+        .send(invalidNewUser)
+        .then((res) => {
+          const message = JSON.parse(res.text);
+          expect(res.status).toBe(400);
+          expect(message).toBeDefined();
+          expect(message.message).toBe('Validation failed');
+          // joi message example
+          expect(message.validation.body.message).toBe('"email" must be a valid email');
+        }));
 
-    it('Create user with valid data, user doesnt exist', () => request
-      .post('/signup')
-      .send(newUser)
-      .then((res) => {
-        const message = JSON.parse(res.text);
-        const userData = message.data;
-        userId = userData._id;
-        expect(res.status).toBe(200);
-        expect(message).toBeDefined();
-        expect(userData._id).toBeDefined();
-        expect(userData.email).toContain(newUser.email);
-      }));
+    it('Create user with valid data, user doesnt exist', () =>
+      request
+        .post('/signup')
+        .send(newUser)
+        .then((res) => {
+          const message = JSON.parse(res.text);
+          const userData = message.data;
+          userId = userData._id;
+          expect(res.status).toBe(200);
+          expect(message).toBeDefined();
+          expect(userData._id).toBeDefined();
+          expect(userData.email).toContain(newUser.email);
+        }));
 
     // sign in and get token
-    it('sign in after registration and get token', () => request
-      .post('/signin')
-      .send(newUser)
-      .then((res) => {
-        const message = JSON.parse(res.text);
-        // get token
-        token = `Bearer ${message.token}`;
-        expect(res.status).toBe(200);
-        expect(token).toBeDefined();
-      }));
+    it('sign in after registration and get token', () =>
+      request
+        .post('/signin')
+        .send(newUser)
+        .then((res) => {
+          const message = JSON.parse(res.text);
+          // get token
+          token = `Bearer ${message.token}`;
+          expect(res.status).toBe(200);
+          expect(token).toBeDefined();
+        }));
   });
 
   describe('User manipulation after sign in (with token)', () => {
     describe('Get current user or user by Id after sign in', () => {
+      it('Get user by invaid id', () => {
+        request
+          .get(`/users/${invalidUserId}`)
+          .set('Authorization', token)
+          .then((res) => {
+            const message = JSON.parse(res.text);
+            expect(res.status).toBe(400);
+            expect(message.message).toBe('Validation failed');
+          });
+      });
+
       it('Get user by id', () => {
         request
-          .get('/users')
-          .query(userId)
+          .get(`/users/${userId}`)
           .set('Authorization', token)
           .then((res) => {
             const message = JSON.parse(res.text);
             const userData = message.data;
             expect(res.status).toBe(200);
-            expect(userData.name).toBe(newUser.name);
-            expect(userData.about).toBe(newUser.about);
+            expect(userData.email).toBe(newUser.email);
           });
       });
 
@@ -198,32 +211,34 @@ describe('All manipulation with user: creation, updating ect', () => {
   });
 
   describe('User already exists: remove, try to log in if user doesnt exist', () => {
-    it('User already exists, user cant sign up', () => request
-      .post('/signup')
-      .send(newUser)
-      .then((res) => {
-        expect(res.status).toBe(409);
-        const message = JSON.parse(res.text);
-        expect(message).toStrictEqual({
-          message: errorAnswers.userExistsError,
-        });
-      }));
+    it('User already exists, user cant sign up', () =>
+      request
+        .post('/signup')
+        .send(newUser)
+        .then((res) => {
+          expect(res.status).toBe(409);
+          const message = JSON.parse(res.text);
+          expect(message).toStrictEqual({
+            message: errorAnswers.userExistsError,
+          });
+        }));
 
     // remove test user
     // at this moment we don't have ability to remove user using api requiest
     it('Remove user from db', () => User.deleteOne({ username: newUser.email }));
 
     // try to sign in again => user doesnt exist
-    it('User doesnt exist', () => request
-      .post('/signin')
-      .send(newUser)
-      .then((res) => {
-        expect(res.status).toBe(401);
-        const message = JSON.parse(res.text);
-        expect(message).toStrictEqual({
-          message: errorAnswers.wrongEmailPassword,
-        });
-      }));
+    it('User doesnt exist', () =>
+      request
+        .post('/signin')
+        .send(newUser)
+        .then((res) => {
+          expect(res.status).toBe(401);
+          const message = JSON.parse(res.text);
+          expect(message).toStrictEqual({
+            message: errorAnswers.wrongEmailPassword,
+          });
+        }));
   });
 
   describe('Invalid url, request method, crash test', () => {

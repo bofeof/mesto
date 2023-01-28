@@ -28,6 +28,8 @@ const invalidUserAvatar = {
   avatar: 'pinimg.com/originals/9a/43/c5/9a43c564d79134433ddf0556b6d5e192.jpg',
 };
 
+const invalidUserId = "63d429720a2d97b7b5852d2*";
+
 // these data about user and card are for cards manipulation
 const newCard = {
   name: 'by user@test.com',
@@ -43,11 +45,13 @@ const invalidNameNewCard = {
 
 const invalidLinkNewCard = {
   name: 'by user@jest.com',
-  link: 'https://devhumor.com/content/uploads/images/June2022/learning_programming.jpg',
+  link: 'htt.com/content/uploads/images/June2022/learning_programming.jpg',
 };
+const invalidCardId = '63d42a090a2d97b7b5852d2A';
 
 module.exports = {
   newUser,
+  invalidUserId,
   invalidNewUser,
   newUserInfo,
   newUserAvatar,
@@ -57,4 +61,5 @@ module.exports = {
   anotherCardId,
   invalidNameNewCard,
   invalidLinkNewCard,
+  invalidCardId,
 };
