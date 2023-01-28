@@ -63,33 +63,21 @@ Use `npm run test`
 
 ## How to install and run locally
 
-It may happen that Mesto can not be available due to hosting expiration. You have ability to deploy this app\repo locally.
+It may happen that Mesto can not be available due to hosting expiration. You have ability to deploy this app\repo locally.  
+So, if you don't want to deploy this app locally you can also check frontend part using [Mesto frontend](https://bofeof.github.io/react-mesto-auth)
 
 ### Settings for frontend (./frontend folder). All comands are located in package.json:
 
-#### `npm install`
-Install all dependencies before start.
-
-#### `npm run build`
-Builds the app for production to the `build` folder.
-
-#### `npm run start`
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
+* `npm install` Install all dependencies before start.
+* `npm run build` Builds the app for production to the `build` folder.
+* `npm run start` Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 ### Settings for backend (./backend folder). All comands also are located in package.json:
 
-#### `npm install`
-Install all dependencies before start.
-
-#### `npm run build`
-Builds the app for production to the `build` folder.
-
-#### `npm run start`
-Run Mesto server. http://localhost:3000
-
-#### `npm run dev`
-Run server with hot-reload (for dev purposes)
+* `npm install` Install all dependencies before start.
+* `npm run build` Builds the app for production to the `build` folder.
+* `npm run start` Run Mesto server. http://localhost:3000
+* `npm run dev` Run server with hot-reload (for dev purposes)
 
 
 
