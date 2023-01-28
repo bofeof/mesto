@@ -54,14 +54,18 @@ IP 51.250.12.246
 Host: https://51.250.12.246 or http://localhost:3000  
 
 #### API
-under construction
+\under construction\
+
+#### Test (Jest)
+Backend part includes request testing for user and cards actions with Jest.  
+Use `npm run test`
 
 
 ## How to install and run locally
 
 It may happen that Mesto can not be available due to hosting expiration. You have ability to deploy this app\repo locally.
 
-Settings for `frontend` (./frontend folder):
+### Settings for frontend (./frontend folder). All comands are located in package.json:
 
 #### `npm install`
 Install all dependencies before start.
@@ -73,7 +77,7 @@ Builds the app for production to the `build` folder.
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 
-Settings for `backend` (./backend folder). All comands are located in package.json:
+### Settings for backend (./backend folder). All comands also are located in package.json:
 
 #### `npm install`
 Install all dependencies before start.
@@ -82,10 +86,10 @@ Install all dependencies before start.
 Builds the app for production to the `build` folder.
 
 #### `npm run start`
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Run Mesto server. http://localhost:3000
 
 #### `npm run dev`
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Run server with hot-reload (for dev purposes)
 
 
 
