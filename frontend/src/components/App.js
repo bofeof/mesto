@@ -58,7 +58,7 @@ export default function App() {
       checkToken(localStorage.getItem('mestoToken'))
         .then((res) => {
           // if jwt secret key is changed by dev while user has active session
-          if(!res){
+          if(!res || !res.data){
             localStorage.clear();
             setLoggedIn(false);
             history.push('/sign-in');
@@ -67,7 +67,10 @@ export default function App() {
           setLoginId(() => res.data._id);
           setLoginEmail(() => res.data.email);
           setLoggedIn(true);
-          history.push('/');
+
+          if(loggedIn && ['', '/', '/sign-in', 'sign-up'].includes(history.location.pathname)){
+            history.push('/');
+          }
 
           // get data about user, gallery
           Promise.all([api.getGalleryData(), api.getUserData()])
@@ -246,8 +249,8 @@ export default function App() {
 
           <Switch>
             <ProptectedRoute
-              path="/"
               exact
+              path="/"
               component={Main}
               // props for Main:
               onEditProfile={handleEditProfileClick}
@@ -274,6 +277,7 @@ export default function App() {
             </Route>
 
             <Route>{loggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}</Route>
+
           </Switch>
 
           <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onSubmit={onUserUpdate} buttonSubmitName={btnTextUserSubmit} />
