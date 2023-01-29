@@ -6,6 +6,7 @@ const { ValidationError } = require('../utils/errorHandler/ValidationError');
 
 module.exports.getAllCards = (req, res, next) => {
   Card.find({})
+    .sort({ createdAt: 'desc' })
     .populate(['owner', 'likes'])
     .then((cards) => res.send({ data: cards }))
     .catch((err) => {

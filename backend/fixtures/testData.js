@@ -4,6 +4,7 @@ const newUser = {
   email: 'user@jest.com',
   password: '111111',
 };
+
 const invalidNewUser = {
   email: 'user',
   password: '111111',
@@ -36,7 +37,9 @@ const newCard = {
   link: 'https://devhumor.com/content/uploads/images/June2022/learning_programming.jpg',
 };
 
-const anotherCardId = "63d42a090a2d97b7b5852d2c";
+// you can use any card id from another user
+// we want to check the possibility of removing card that was created by another person
+const anotherCardId = "63d5d73b6c890d040eb0f2fd";
 
 const invalidNameNewCard = {
   name: '',

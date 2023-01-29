@@ -252,24 +252,24 @@ describe('All manipulation with user: creation, updating ect', () => {
     // remove test user and cards
     // at this moment we don't have ability to remove user using api requiest
     it('Remove all cards db', () => Card.deleteMany({ owner: { _id: userId } }));
-    it('Remove user from db', () => User.deleteOne({ username: newUser.email }));
+    it('Remove user from db', () => User.deleteOne({ email: newUser.email }));
   });
 
   describe('Invalid url, request method, crash test', () => {
     it('Check invalid url or method, example 1', () => {
-      request.post('/card/123', (res) => {
+      request.get('/card/123', (res) => {
         expect(res.status).toBe(404);
       });
     });
 
     it('Check invalid url or method, example 2', () => {
-      request.delete('/cards/e/aaa/xxx/123', (res) => {
+      request.get('/cards/e/aaa/xxx/123', (res) => {
         expect(res.status).toBe(404);
       });
     });
 
     it('Crash test', () => {
-      request.delete('/crash-test', (res) => {
+      request.get('/crash-test', (res) => {
         expect(res.status).toBe(500);
       });
     });
