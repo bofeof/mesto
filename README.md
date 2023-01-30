@@ -1,6 +1,9 @@
 # Mesto
 
-[Mesto](https://bofeof.nomoredomains.club) is a type of Instagram prototype. This project includes [frontend](https://github.com/bofeof/react-mesto-auth) and [backend](https://github.com/bofeof/express-mesto-gha) parts and it's deployed and developed to practice programming skills.
+[Mesto](https://bofeof.nomoredomains.club) is a type of Instagram prototype.  
+If https://bofeof.nomoredomains.club (hosting probably expired) is not available you can also check another deployment [Mesto frontend](https://bofeof.github.io/react-mesto-auth) or run Mesto locally.
+
+This project includes [frontend](https://github.com/bofeof/react-mesto-auth) and [backend](https://github.com/bofeof/express-mesto-gha) parts and it's deployed and developed to practice programming skills.
 
 Click this [link](https://bofeof.nomoredomains.club) to check it out.
 
@@ -56,11 +59,12 @@ IP 51.250.12.246
 Host: https://51.250.12.246 or http://localhost:3000
 
 #### API
-* Url: https://51.250.12.246 or http://localhost:3000
-* headers: {  
-    authorization: "Bearer " + your token,  
-    "Content-Type": "application/json",  
-  }  
+
+- Url: https://51.250.12.246 or http://localhost:3000
+- headers: {  
+   authorization: "Bearer " + your token,  
+   "Content-Type": "application/json",  
+  }
 
 Available endpoints:
 | **Method** | **Endpoint** | **Action** | **Token required ('Bearer ' + jwt)** | **Required body data** |
@@ -77,7 +81,6 @@ Available endpoints:
 | DELETE | /cards/:cardId | Remove card. User has ability to remove only its own cards | Yes | |
 | PUT | /cards/:cardId | Set like | Yes | |
 | DELETE | /cards/:cardId | Remove like | Yes | |
-
 
 🔜 Response codes, messages for user
 
