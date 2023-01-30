@@ -100,7 +100,7 @@ So, if you don't want to deploy this app locally you can also check frontend par
 - `npm run build` Builds the app for production to the `build` folder.
 - `npm run start` Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-### Settings for backend (./backend folder). All comands also are located in package.json:
+### Settings for backend (./backend folder). All comands are located in package.json:
 
 - `npm install` Install all dependencies before start.
 - `npm run start` Run Mesto server. http://localhost:3000
