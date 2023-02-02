@@ -5,7 +5,7 @@ const Card = require('../models/card');
 
 const {
   newUser, newCard, anotherCardId, invalidNameNewCard, invalidLinkNewCard, invalidCardId,
-} = require('../fixtures/testData');
+} = require('./fixtures/testData');
 const app = require('../app');
 
 const { MONGO_DB } = process.env;

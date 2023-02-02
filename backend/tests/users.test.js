@@ -9,7 +9,7 @@ const {
   newUserAvatar,
   invalidUserInfo,
   invalidUserAvatar,
-} = require('../fixtures/testData');
+} = require('./fixtures/testData');
 const app = require('../app');
 
 const { MONGO_DB } = process.env;
