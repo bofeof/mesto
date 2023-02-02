@@ -55,12 +55,14 @@ Backend:
 
 ## Backend part:
 
-IP 51.250.12.246  
-Host: https://51.250.12.246 or http://localhost:3000
+IP prod 51.250.12.246  
+Current prod:  https://api.bofeof.nomoredomains.rocks  
+or 
+Local: http://localhost:3000
 
 #### API
 
-- Url: https://51.250.12.246 or http://localhost:3000
+- Url: https://api.bofeof.nomoredomains.rocks or http://localhost:3000
 - headers: {  
    authorization: "Bearer " + your token,  
    "Content-Type": "application/json",  
@@ -96,6 +98,7 @@ So, if you don't want to deploy this app locally you can also check frontend par
 
 ### Settings for frontend (./frontend folder). All comands are located in package.json:
 
+You need to change value of REACT_APP_BASE_URL (frontend/src/utils/constants.js)
 - `npm install` Install all dependencies before start.
 - `npm run build` Builds the app for production to the `build` folder.
 - `npm run start` Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
@@ -105,4 +108,4 @@ So, if you don't want to deploy this app locally you can also check frontend par
 - `npm install` Install all dependencies before start.
 - `npm run start` Run Mesto server. http://localhost:3000
 - `npm run dev` Run server with hot-reload (for dev purposes)
-- `npm run test` Jest request-tests for user and cards actions (for dev purposes). Test data is placed in ./backend/fixtures folder. Jest tests - ./backend/tests
+- `npm run test` Jest request-tests for user and cards actions (for dev purposes). Test data is placed in ./backend/test/fixtures. Jest tests - ./backend/tests
