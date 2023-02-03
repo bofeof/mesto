@@ -29,11 +29,11 @@ If you want to create a new user, please, use fake email(for example test@test.c
 ✅ Classic and burger menu, it depends on screen width:
 
 - burger menu (width < 768px);
-- classic menu (width > 768px).
+- classic menu (width > 768px).  
 
-🛠️ 404 page and button for redirection if something is wrong.
+✅ 404 page and button for redirection if something is wrong (with myltiple slashes).
 
-🔜 Muiltilanguage support.
+❔🔜 Muiltilanguage support.
 
 ## Technologies:
 
