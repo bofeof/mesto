@@ -6,7 +6,7 @@
     "type": "git",
     "url": "git+https://github.com/bofeof/react-mesto-auth.git"
   },
-  "homepage": "./",
+  "homepage": "/",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
