@@ -5,7 +5,9 @@ If https://bofeof.nomoredomains.club (hosting probably expired) is not available
 
 This project includes [frontend](https://github.com/bofeof/react-mesto-auth) and [backend](https://github.com/bofeof/express-mesto-gha) parts and it's deployed and developed to practice programming skills.
 
-Click this [link](https://bofeof.nomoredomains.club) to check it out.
+Demo [Demo of Mesto](https://github.com/bofeof/react-mesto-api-full/issues/5)
+
+If you want to create a new user, please, use fake email(for example test@test.com)
 
 ## Available functionality runs through the server:
 
