@@ -48,7 +48,9 @@ mongoose.connect(MONGO_DB);
 // cors
 const corsOption = {
   origin: '*',
+  optionsSuccessStatus: 200,
 };
+
 app.use(cors(corsOption));
 
 app.use(requestLogger);
@@ -70,7 +72,6 @@ app.get('/crash-test', cors(corsOption), () => {
 
 app.post(
   '/signin',
-  cors(corsOption),
   celebrate({
     body: Joi.object().keys({
       email: Joi.string().email().required(),
@@ -82,7 +83,6 @@ app.post(
 
 app.post(
   '/signup',
-  cors(corsOption),
   celebrate({
     body: Joi.object().keys({
       name: Joi.string().min(2).max(30),
