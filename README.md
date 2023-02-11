@@ -33,6 +33,8 @@ If you want to create a new user, please, use fake email(for example test@test.c
 
 ✅ 404 page and button for redirection if something is wrong (with myltiple slashes).
 
+🔜 jwt token in cookie (instead of local storage)
+
 ❔🔜 Muiltilanguage support.
 
 ## Technologies:
