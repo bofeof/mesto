@@ -46,7 +46,7 @@ module.exports.deleteCardbyId = (req, res, next) => {
 
   // check if card exists and check owner
   Card.findById(cardId)
-    .then((card) => {
+    .then(async (card) => {
       if (!card) {
         next(new NotFoundError({ message: errorAnswers.removingCardError }));
         return;
@@ -58,14 +58,12 @@ module.exports.deleteCardbyId = (req, res, next) => {
         return;
       }
 
-      // removing
-      Card.findByIdAndRemove(cardId, (err, removingCard) => {
-        if (err) {
-          next(err);
-          return;
-        }
+      try {
+        const removingCard = await Card.findByIdAndRemove(cardId).populate(['owner', 'likes']);
         res.send({ data: removingCard });
-      }).populate(['owner', 'likes']);
+      } catch (err) {
+        next(err);
+      }
     })
     .catch((err) => {
       next(err);
