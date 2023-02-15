@@ -20,7 +20,7 @@ const { uncaughtExceptionHandler } = require('./utils/errorHandler/uncaughtExcep
 
 const app = express();
 
-// process.on('uncaughtException', uncaughtExceptionHandler);
+process.on('uncaughtException', uncaughtExceptionHandler);
 
 app.use(cors(corsOption));
 

@@ -2,6 +2,7 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
+const { devEnvOptions } = require('../utils/devEnvOptions');
 const { errorAnswers } = require('../utils/constants');
 
 const { DublicateDataError } = require('../utils/errorHandler/DublicateDataError');
@@ -109,7 +110,7 @@ module.exports.login = (req, res, next) => {
   User.findUserByCredentials(email, password)
     .then((user) => {
       // create jwt
-      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : devEnvOptions.JWT_SECRET, { expiresIn: '7d' });
       res.send({ token });
     })
     .catch((err) => {
