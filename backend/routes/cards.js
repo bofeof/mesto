@@ -1,5 +1,12 @@
-const { celebrate, Joi } = require('celebrate');
 const cardRouter = require('express').Router();
+
+const {
+  createCardValidation,
+  deleteCardValidation,
+  likeCardValidation,
+  dislikeCardValidation,
+} = require('../utils/celebrateValidation');
+
 const {
   getAllCards, createCard, deleteCardbyId, likeCard, dislikeCard,
 } = require('../controllers/cards');
@@ -8,44 +15,24 @@ cardRouter.get('/', getAllCards);
 
 cardRouter.post(
   '/',
-  celebrate({
-    body: Joi.object().keys({
-      name: Joi.string().required().min(2).max(30),
-      link: Joi.string().uri().required(),
-    }),
-  }),
+  createCardValidation,
   createCard,
 );
 
 cardRouter.delete(
   '/:cardId',
-  celebrate({
-    params: Joi.object().keys({
-      cardId: Joi.string().required().length(24)
-        .hex(),
-    }),
-  }),
+  deleteCardValidation,
   deleteCardbyId,
 );
 
 cardRouter.put(
   '/:cardId/likes',
-  celebrate({
-    params: Joi.object().keys({
-      cardId: Joi.string().required().length(24)
-        .hex(),
-    }),
-  }),
+  likeCardValidation,
   likeCard,
 );
 cardRouter.delete(
   '/:cardId/likes',
-  celebrate({
-    params: Joi.object().keys({
-      cardId: Joi.string().required().length(24)
-        .hex(),
-    }),
-  }),
+  dislikeCardValidation,
   dislikeCard,
 );
 

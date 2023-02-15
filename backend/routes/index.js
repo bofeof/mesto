@@ -1,0 +1,27 @@
+const mainApiRouter = require('express').Router();
+
+const { wrongRouteErrorHandler } = require('../utils/errorHandler/wrongRouteErrorHandler');
+
+const userRouter = require('./users');
+const cardRouter = require('./cards');
+
+const { login, createUser } = require('../controllers/users');
+const { signinValidation, signupValidation } = require('../utils/celebrateValidation');
+
+const auth = require('../middlewares/auth');
+
+mainApiRouter.post('/signin', signinValidation, login);
+mainApiRouter.post('/signup', signupValidation, createUser);
+
+mainApiRouter.use('/users', auth, userRouter);
+mainApiRouter.use('/cards', auth, cardRouter);
+
+mainApiRouter.use(wrongRouteErrorHandler);
+
+mainApiRouter.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
+
+module.exports = mainApiRouter;
