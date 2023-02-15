@@ -22,7 +22,7 @@ module.exports.createCard = (req, res, next) => {
       Card.findById(card._id).populate(['owner', 'likes'])
         .then((data) => {
           if (!data) {
-            next(new NotFoundError({ message: errorAnswers.userIdError }));
+            next(new NotFoundError({ message: errorAnswers.cardIdError }));
           }
           // send created card
           res.send({ data });
