@@ -15,7 +15,7 @@ mainApiRouter.post('/signup', signupValidation, createUser);
 mainApiRouter.use('/users', auth, userRouter);
 mainApiRouter.use('/cards', auth, cardRouter);
 
-mainApiRouter.use(wrongRouteErrorHandler);
+mainApiRouter.use('/', auth, wrongRouteErrorHandler);
 
 mainApiRouter.get('/crash-test', () => {
   setTimeout(() => {
