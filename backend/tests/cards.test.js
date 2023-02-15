@@ -8,7 +8,16 @@ const {
 } = require('./fixtures/testData');
 const app = require('../app');
 
-const { MONGO_DB } = process.env;
+const { devEnvOptions } = require('../utils/devEnvOptions');
+
+const {
+  NODE_ENV = 'development',
+  MONGO_URL_PROD,
+  MONGO_DB_PROD,
+} = process.env;
+
+const MONGO_URL = NODE_ENV === 'production' ? MONGO_URL_PROD : devEnvOptions.MONGO_URL;
+const MONGO_DB = NODE_ENV === 'production' ? MONGO_DB_PROD : devEnvOptions.MONGO_DB;
 const { errorAnswers } = require('../utils/constants');
 
 let userId;
@@ -19,11 +28,12 @@ const request = supertest(app);
 
 // mongoose for removing user after all test
 beforeAll(() => {
-  mongoose.connect(MONGO_DB);
+  mongoose.set('strictQuery', true);
+  mongoose.connect(`${MONGO_URL}/${MONGO_DB}`);
 });
 
 afterAll(() => {
-  mongoose.disconnect(MONGO_DB);
+  mongoose.disconnect(`${MONGO_URL}/${MONGO_DB}`);
 });
 
 // TESTS
