@@ -3,11 +3,13 @@ require('dotenv').config({ path: '../.env' });
 const { errors } = require('celebrate');
 const process = require('process');
 const express = require('express');
-const mongoose = require('mongoose');
+
 const bodyParser = require('body-parser');
 
 const helmet = require('helmet');
 const cors = require('cors');
+
+const mainApiRouter = require('./routes/index');
 
 const corsOption = require('./utils/corsOptions');
 const requestLimiterOptions = require('./utils/requestLimiterOptions');
@@ -16,15 +18,9 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { centralizedErrorHandler } = require('./utils/errorHandler/centralizedErrorHandler');
 const { uncaughtExceptionHandler } = require('./utils/errorHandler/uncaughtExceptionHandler');
 
-const { MONGO_DB, MONGO_URL } = process.env;
-
 const app = express();
 
-const mainApiRouter = require('./routes/index');
-
 process.on('uncaughtException', uncaughtExceptionHandler);
-
-mongoose.connect(`${MONGO_URL}/${MONGO_DB}`);
 
 app.use(cors(corsOption));
 

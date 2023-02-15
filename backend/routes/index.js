@@ -4,11 +4,10 @@ const { wrongRouteErrorHandler } = require('../utils/errorHandler/wrongRouteErro
 
 const userRouter = require('./users');
 const cardRouter = require('./cards');
+const auth = require('../middlewares/auth');
 
 const { login, createUser } = require('../controllers/users');
 const { signinValidation, signupValidation } = require('../utils/celebrateValidation');
-
-const auth = require('../middlewares/auth');
 
 mainApiRouter.post('/signin', signinValidation, login);
 mainApiRouter.post('/signup', signupValidation, createUser);
