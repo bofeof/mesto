@@ -12,7 +12,7 @@ const cors = require('cors');
 const mainApiRouter = require('./routes/index');
 
 const corsOption = require('./utils/corsOptions');
-const requestLimiterOptions = require('./utils/requestLimiterOptions');
+const { requestLimiterOptions } = require('./utils/requestLimiterOptions');
 
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { centralizedErrorHandler } = require('./utils/errorHandler/centralizedErrorHandler');
@@ -20,7 +20,7 @@ const { uncaughtExceptionHandler } = require('./utils/errorHandler/uncaughtExcep
 
 const app = express();
 
-process.on('uncaughtException', uncaughtExceptionHandler);
+// process.on('uncaughtException', uncaughtExceptionHandler);
 
 app.use(cors(corsOption));
 
