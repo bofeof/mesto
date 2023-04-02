@@ -6,16 +6,12 @@ const { devEnvOptions } = require('../utils/devEnvOptions');
 const { UnauthorizedError } = require('../utils/errorHandler/UnauthorizedError');
 
 module.exports = (req, res, next) => {
-  const { authorization } = req.headers;
-
-  if (!authorization || !authorization.startsWith('Bearer ')) {
-    next(new UnauthorizedError({ message: errorAnswers.authError }));
-    return;
+  const token = req.cookies.mestoToken;
+  if (!token) {
+    next(new UnauthorizedError({ message: errorAnswers.tokenError }));
   }
 
-  const token = authorization.replace('Bearer ', '');
   let payload;
-
   try {
     payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : devEnvOptions.JWT_SECRET);
   } catch (err) {

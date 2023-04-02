@@ -22,7 +22,6 @@ module.exports.getUserById = (req, res, next) => {
 
   User.findById(userId)
     .then((user) => {
-      // correct id but doesnt exist in db
       if (!user) {
         next(new NotFoundError({ message: errorAnswers.userIdError }));
         return;
@@ -52,9 +51,11 @@ module.exports.createUser = (req, res, next) => {
     .catch((err) => {
       // check 11000, user already exists
       if (err.code === 11000) {
-        next(new DublicateDataError({
-          message: errorAnswers.userExistsError,
-        }));
+        next(
+          new DublicateDataError({
+            message: errorAnswers.userExistsError,
+          }),
+        );
         return;
       }
       if (err.name === 'ValidationError') {
@@ -109,16 +110,25 @@ module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   User.findUserByCredentials(email, password)
     .then((user) => {
-      // create jwt
-      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : devEnvOptions.JWT_SECRET, { expiresIn: '7d' });
-      res.send({ token });
+      // jwt and cookie
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : devEnvOptions.JWT_SECRET, {
+        expiresIn: '7d',
+      });
+      res
+        .cookie('mestoToken', token, {
+          httpOnly: process.env.NODE_ENV === 'production',
+          sameSite: true,
+          secure: process.env.NODE_ENV === 'production',
+          maxAge: 3600000 * 24 * 7,
+        })
+        .status(200)
+        .json({ message: 'Пользователь зашел в аккаунт' });
     })
     .catch((err) => {
       next(err);
     });
 };
 
-// get data about active user
 module.exports.getProfileInfo = (req, res, next) => {
   const currentUserId = req.user._id;
   User.findById(currentUserId)

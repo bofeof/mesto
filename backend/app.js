@@ -5,6 +5,7 @@ const process = require('process');
 const express = require('express');
 
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 
 const helmet = require('helmet');
 const cors = require('cors');
@@ -23,6 +24,8 @@ const app = express();
 process.on('uncaughtException', uncaughtExceptionHandler);
 
 app.use(cors(corsOption));
+
+app.use(cookieParser());
 
 app.use(requestLogger);
 
