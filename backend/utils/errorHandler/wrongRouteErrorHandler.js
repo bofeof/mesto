@@ -1,8 +1,8 @@
 const { NotFoundError } = require('./NotFoundError');
-const { errorAnswers } = require('../constants');
+const { ERROR_ANSWERS } = require('../errorAnswers');
 
 module.exports.wrongRouteErrorHandler = (req, res, next) => {
   next(new NotFoundError({
-    message: errorAnswers.routeError,
+    message: ERROR_ANSWERS.routeError,
   }));
 };

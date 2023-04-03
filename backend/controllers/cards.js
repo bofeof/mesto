@@ -1,5 +1,5 @@
 const Card = require('../models/card');
-const { errorAnswers } = require('../utils/constants');
+const { ERROR_ANSWERS } = require('../utils/errorAnswers');
 const { NotFoundError } = require('../utils/errorHandler/NotFoundError');
 const { ForbiddenError } = require('../utils/errorHandler/ForbiddenError');
 const { ValidationError } = require('../utils/errorHandler/ValidationError');
@@ -22,7 +22,7 @@ module.exports.createCard = (req, res, next) => {
       Card.findById(card._id).populate(['owner', 'likes'])
         .then((data) => {
           if (!data) {
-            next(new NotFoundError({ message: errorAnswers.cardIdError }));
+            next(new NotFoundError({ message: ERROR_ANSWERS.cardIdError }));
           }
           // send created card
           res.send({ data });
@@ -48,13 +48,13 @@ module.exports.deleteCardbyId = (req, res, next) => {
   Card.findById(cardId)
     .then(async (card) => {
       if (!card) {
-        next(new NotFoundError({ message: errorAnswers.removingCardError }));
+        next(new NotFoundError({ message: ERROR_ANSWERS.removingCardError }));
         return;
       }
       // card exists
       const ownerCardId = card.owner._id.toString();
       if (userId !== ownerCardId) {
-        next(new ForbiddenError({ message: errorAnswers.forbiddenError }));
+        next(new ForbiddenError({ message: ERROR_ANSWERS.forbiddenError }));
         return;
       }
 
@@ -78,7 +78,7 @@ module.exports.likeCard = (req, res, next) => {
     .then((card) => {
       // correct id but doesnt exist in db
       if (!card) {
-        next(new NotFoundError({ message: errorAnswers.settingLikeError }));
+        next(new NotFoundError({ message: ERROR_ANSWERS.settingLikeError }));
         return;
       }
       res.send({ data: card });
@@ -96,7 +96,7 @@ module.exports.dislikeCard = (req, res, next) => {
     .then((card) => {
       // correct id but doesnt exist in db
       if (!card) {
-        next(new NotFoundError({ message: errorAnswers.removingLikeError }));
+        next(new NotFoundError({ message: ERROR_ANSWERS.removingLikeError }));
         return;
       }
       res.send({ data: card });

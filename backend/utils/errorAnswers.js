@@ -1,5 +1,5 @@
 // messages for user
-const errorAnswers = {
+const ERROR_ANSWERS = {
   userIdError: 'Невозможно найти пользователя, не существует в базе',
   userExistsError: 'Невозможно зарегистрировать пользователя: email уже использовался для регистрации',
   cardIdError: 'Невозможно найти карточку по id',
@@ -13,4 +13,4 @@ const errorAnswers = {
   wrongEmailPassword: 'Невозможно войти в Mesto: введены неверные почта и пароль',
 };
 
-module.exports.errorAnswers = errorAnswers;
+module.exports.ERROR_ANSWERS = ERROR_ANSWERS;

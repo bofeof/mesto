@@ -6,12 +6,12 @@ const userRouter = require('./users');
 const cardRouter = require('./cards');
 const auth = require('../middlewares/auth');
 
-const { login, createUser } = require('../controllers/users');
+const { login, createUser, logout } = require('../controllers/users');
 const { signinValidation, signupValidation } = require('../utils/celebrateValidation');
 
 mainApiRouter.post('/signin', signinValidation, login);
+mainApiRouter.post('/signout', logout);
 mainApiRouter.post('/signup', signupValidation, createUser);
-
 mainApiRouter.use('/users', auth, userRouter);
 mainApiRouter.use('/cards', auth, cardRouter);
 

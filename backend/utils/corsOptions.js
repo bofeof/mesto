@@ -1,4 +1,4 @@
-module.exports.corsOption = {
+module.exports.CORS_OPTIONS = {
   origin: true,
   credentials: true,
   optionsSuccessStatus: 200,

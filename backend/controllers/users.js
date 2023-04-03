@@ -2,8 +2,9 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
-const { devEnvOptions } = require('../utils/devEnvOptions');
-const { errorAnswers } = require('../utils/constants');
+const { DEV_ENV_OPTIONS } = require('../utils/devEnvOptions');
+const { ERROR_ANSWERS } = require('../utils/errorAnswers');
+const { USER_MESSAGES } = require('../utils/userMessages');
 
 const { DublicateDataError } = require('../utils/errorHandler/DublicateDataError');
 const { NotFoundError } = require('../utils/errorHandler/NotFoundError');
@@ -23,7 +24,7 @@ module.exports.getUserById = (req, res, next) => {
   User.findById(userId)
     .then((user) => {
       if (!user) {
-        next(new NotFoundError({ message: errorAnswers.userIdError }));
+        next(new NotFoundError({ message: ERROR_ANSWERS.userIdError }));
         return;
       }
       res.send({ data: user });
@@ -53,7 +54,7 @@ module.exports.createUser = (req, res, next) => {
       if (err.code === 11000) {
         next(
           new DublicateDataError({
-            message: errorAnswers.userExistsError,
+            message: ERROR_ANSWERS.userExistsError,
           }),
         );
         return;
@@ -111,7 +112,7 @@ module.exports.login = (req, res, next) => {
   User.findUserByCredentials(email, password)
     .then((user) => {
       // jwt and cookie
-      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : devEnvOptions.JWT_SECRET, {
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : DEV_ENV_OPTIONS.JWT_SECRET, {
         expiresIn: '7d',
       });
       res
@@ -122,11 +123,15 @@ module.exports.login = (req, res, next) => {
           maxAge: 3600000 * 24 * 7,
         })
         .status(200)
-        .json({ message: 'Пользователь зашел в аккаунт' });
+        .json({ message: USER_MESSAGES.userLogin });
     })
     .catch((err) => {
       next(err);
     });
+};
+
+module.exports.logout = (req, res) => {
+  res.clearCookie('mestoToken').status(200).json({ message: USER_MESSAGES.userLogout });
 };
 
 module.exports.getProfileInfo = (req, res, next) => {

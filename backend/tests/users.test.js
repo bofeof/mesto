@@ -12,20 +12,17 @@ const {
 } = require('./fixtures/testData');
 const app = require('../app');
 
-const { devEnvOptions } = require('../utils/devEnvOptions');
+const { DEV_ENV_OPTIONS } = require('../utils/devEnvOptions');
 
-const {
-  NODE_ENV = 'development',
-  MONGO_URL_PROD,
-  MONGO_DB_PROD,
-} = process.env;
+const { NODE_ENV = 'development', MONGO_URL_PROD, MONGO_DB_PROD } = process.env;
 
-const MONGO_URL = NODE_ENV === 'production' ? MONGO_URL_PROD : devEnvOptions.MONGO_URL;
-const MONGO_DB = NODE_ENV === 'production' ? MONGO_DB_PROD : devEnvOptions.MONGO_DB;
-const { errorAnswers } = require('../utils/constants');
+const MONGO_URL = NODE_ENV === 'production' ? MONGO_URL_PROD : DEV_ENV_OPTIONS.MONGO_URL;
+const MONGO_DB = NODE_ENV === 'production' ? MONGO_DB_PROD : DEV_ENV_OPTIONS.MONGO_DB;
+const { ERROR_ANSWERS } = require('../utils/errorAnswers');
 
-let token;
 let userId;
+let token;
+let cookieData;
 
 const request = supertest(app);
 
@@ -38,6 +35,10 @@ beforeAll(() => {
 afterAll(() => {
   mongoose.disconnect(`${MONGO_URL}/${MONGO_DB}`);
 });
+
+function getJwtToken(data) {
+  return data.split(';')[0].split('=')[1];
+}
 
 // TESTS
 describe('All manipulation with user: creation, updating ect', () => {
@@ -72,9 +73,8 @@ describe('All manipulation with user: creation, updating ect', () => {
       .post('/signin')
       .send(newUser)
       .then((res) => {
-        const message = JSON.parse(res.text);
-        // get token
-        token = `Bearer ${message.token}`;
+        cookieData = res.header['set-cookie'];
+        token = `${getJwtToken(cookieData[0])}`;
         expect(res.status).toBe(200);
         expect(token).toBeDefined();
       }));
@@ -85,7 +85,7 @@ describe('All manipulation with user: creation, updating ect', () => {
       it('Get user by invaid id', () => {
         request
           .get(`/users/${invalidUserId}`)
-          .set('Authorization', token)
+          .set('Cookie', `mestoToken=${token}`)
           .then((res) => {
             const message = JSON.parse(res.text);
             expect(res.status).toBe(400);
@@ -96,7 +96,7 @@ describe('All manipulation with user: creation, updating ect', () => {
       it('Get user by id', () => {
         request
           .get(`/users/${userId}`)
-          .set('Authorization', token)
+          .set('Cookie', `mestoToken=${token}`)
           .then((res) => {
             const message = JSON.parse(res.text);
             const userData = message.data;
@@ -108,7 +108,7 @@ describe('All manipulation with user: creation, updating ect', () => {
       it('Get current user', () => {
         request
           .get('/users/me')
-          .set('Authorization', token)
+          .set('Cookie', `mestoToken=${token}`)
           .then((res) => {
             const message = JSON.parse(res.text);
             const userData = message.data;
@@ -120,12 +120,12 @@ describe('All manipulation with user: creation, updating ect', () => {
       it('Get current user, wrong token', () => {
         request
           .get('/users/me')
-          .set('Authorization', '')
+          // .set('Cookie', ``)
           .then((res) => {
             const message = JSON.parse(res.text);
             expect(res.status).toBe(401);
             expect(message).toStrictEqual({
-              message: errorAnswers.authError,
+              message: ERROR_ANSWERS.authError,
             });
           });
       });
@@ -135,7 +135,7 @@ describe('All manipulation with user: creation, updating ect', () => {
       it('Change user info(name and about) after login, token is valid', () => {
         request
           .patch('/users/me')
-          .set('Authorization', token)
+          .set('Cookie', `mestoToken=${token}`)
           .send(newUserInfo)
           .then((res) => {
             const message = JSON.parse(res.text);
@@ -149,13 +149,13 @@ describe('All manipulation with user: creation, updating ect', () => {
       it('Change user info(name and about) after login, token is invalid => auth error', () => {
         request
           .patch('/users/me')
-          .set('Authorization', '')
+          .set('Cookie', '')
           .send(newUserInfo)
           .then((res) => {
             const message = JSON.parse(res.text);
             expect(res.status).toBe(401);
             expect(message).toStrictEqual({
-              message: errorAnswers.authError,
+              message: ERROR_ANSWERS.authError,
             });
           });
       });
@@ -163,7 +163,7 @@ describe('All manipulation with user: creation, updating ect', () => {
       it('Change user info(name and about) after login, invalid data, valid token', () => {
         request
           .patch('/users/me')
-          .set('Authorization', token)
+          .set('Cookie', `mestoToken=${token}`)
           .send(invalidUserInfo)
           .then((res) => {
             const message = JSON.parse(res.text);
@@ -177,7 +177,7 @@ describe('All manipulation with user: creation, updating ect', () => {
       it('Change user avatar after login, token is valid', () => {
         request
           .patch('/users/me/avatar')
-          .set('Authorization', token)
+          .set('Cookie', `mestoToken=${token}`)
           .send(newUserAvatar)
           .then((res) => {
             const message = JSON.parse(res.text);
@@ -187,16 +187,15 @@ describe('All manipulation with user: creation, updating ect', () => {
           });
       });
 
-      it('Change user avatar after login, token is invalid => auth error', () => {
+      it('Change user avatar after login, no token', () => {
         request
           .patch('/users/me/avatar')
-          .set('Authorization', '')
           .send(newUserAvatar)
           .then((res) => {
             const message = JSON.parse(res.text);
             expect(res.status).toBe(401);
             expect(message).toStrictEqual({
-              message: errorAnswers.authError,
+              message: ERROR_ANSWERS.authError,
             });
           });
       });
@@ -204,7 +203,7 @@ describe('All manipulation with user: creation, updating ect', () => {
       it('Change user avatar after login, invalid data, valid token', () => {
         request
           .patch('/users/me/avatar')
-          .set('Authorization', token)
+          .set('Cookie', `mestoToken=${token}`)
           .send(invalidUserAvatar)
           .then((res) => {
             const message = JSON.parse(res.text);
@@ -225,7 +224,7 @@ describe('All manipulation with user: creation, updating ect', () => {
         expect(res.status).toBe(409);
         const message = JSON.parse(res.text);
         expect(message).toStrictEqual({
-          message: errorAnswers.userExistsError,
+          message: ERROR_ANSWERS.userExistsError,
         });
       }));
 
@@ -241,7 +240,7 @@ describe('All manipulation with user: creation, updating ect', () => {
         expect(res.status).toBe(401);
         const message = JSON.parse(res.text);
         expect(message).toStrictEqual({
-          message: errorAnswers.wrongEmailPassword,
+          message: ERROR_ANSWERS.wrongEmailPassword,
         });
       }));
   });

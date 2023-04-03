@@ -12,8 +12,8 @@ const cors = require('cors');
 
 const mainApiRouter = require('./routes/index');
 
-const corsOption = require('./utils/corsOptions');
-const { requestLimiterOptions } = require('./utils/requestLimiterOptions');
+const CORS_OPTIONS = require('./utils/corsOptions');
+const { REQUEST_LIMITER_OPTIONS } = require('./utils/requestLimiterOptions');
 
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { centralizedErrorHandler } = require('./utils/errorHandler/centralizedErrorHandler');
@@ -23,14 +23,14 @@ const app = express();
 
 process.on('uncaughtException', uncaughtExceptionHandler);
 
-app.use(cors(corsOption));
+app.use(cors(CORS_OPTIONS));
 
 app.use(cookieParser());
 
 app.use(requestLogger);
 
 // set lim of requests
-app.use(requestLimiterOptions);
+app.use(REQUEST_LIMITER_OPTIONS);
 
 // security
 app.use(helmet());
