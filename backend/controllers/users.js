@@ -2,7 +2,9 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
-const { errorAnswers } = require('../utils/constants');
+const { DEV_ENV_OPTIONS } = require('../utils/devEnvOptions');
+const { ERROR_ANSWERS } = require('../utils/errorAnswers');
+const { USER_MESSAGES } = require('../utils/userMessages');
 
 const { DublicateDataError } = require('../utils/errorHandler/DublicateDataError');
 const { NotFoundError } = require('../utils/errorHandler/NotFoundError');
@@ -21,9 +23,8 @@ module.exports.getUserById = (req, res, next) => {
 
   User.findById(userId)
     .then((user) => {
-      // correct id but doesnt exist in db
       if (!user) {
-        next(new NotFoundError({ message: errorAnswers.userIdError }));
+        next(new NotFoundError({ message: ERROR_ANSWERS.userIdError }));
         return;
       }
       res.send({ data: user });
@@ -35,33 +36,37 @@ module.exports.getUserById = (req, res, next) => {
 
 module.exports.createUser = (req, res, next) => {
   const { password } = req.body;
-  bcrypt.hash(password, 10).then((hash) => User.create({
-    ...req.body,
-    password: hash,
-  })
-    .then((user) => {
-      User.findById(user._id)
-        .then((newUser) => {
-          res.send({ data: newUser });
-        })
-        .catch((err) => {
-          next(err);
-        });
+  bcrypt.hash(password, 10).then((hash) =>
+    User.create({
+      ...req.body,
+      password: hash,
     })
-    .catch((err) => {
-      // check 11000, user already exists
-      if (err.code === 11000) {
-        next(new DublicateDataError({
-          message: errorAnswers.userExistsError,
-        }));
-        return;
-      }
-      if (err.name === 'ValidationError') {
-        next(new ValidationError({ message: err.message }));
-        return;
-      }
-      next(err);
-    }));
+      .then((user) => {
+        User.findById(user._id)
+          .then((newUser) => {
+            res.send({ data: newUser });
+          })
+          .catch((err) => {
+            next(err);
+          });
+      })
+      .catch((err) => {
+        // check 11000, user already exists
+        if (err.code === 11000) {
+          next(
+            new DublicateDataError({
+              message: ERROR_ANSWERS.userExistsError,
+            })
+          );
+          return;
+        }
+        if (err.name === 'ValidationError') {
+          next(new ValidationError({ message: err.message }));
+          return;
+        }
+        next(err);
+      })
+  );
 };
 
 module.exports.updateProfile = (req, res, next) => {
@@ -74,7 +79,7 @@ module.exports.updateProfile = (req, res, next) => {
       new: true,
       runValidators: true,
       upsert: false,
-    },
+    }
   )
     .then((user) => res.send({ data: user }))
     .catch((err) => {
@@ -92,7 +97,7 @@ module.exports.updateAvatar = (req, res, next) => {
       new: true,
       runValidators: true,
       upsert: false,
-    },
+    }
   )
     .then((user) => res.send({ data: user }))
     .catch((err) => {
@@ -108,16 +113,28 @@ module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   User.findUserByCredentials(email, password)
     .then((user) => {
-      // create jwt
-      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
-      res.send({ token });
+      // jwt and cookie
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : DEV_ENV_OPTIONS.JWT_SECRET, {
+        expiresIn: '7d',
+      });
+      res
+        .cookie('mestoToken', token, {
+          httpOnly: process.env.NODE_ENV === 'production',
+          sameSite: true,
+          secure: process.env.NODE_ENV === 'production',
+          maxAge: 3600000 * 24 * 7,
+        })
+        .json({ message: USER_MESSAGES.userLogin });
     })
     .catch((err) => {
       next(err);
     });
 };
 
-// get data about active user
+module.exports.logout = (req, res) => {
+  res.clearCookie('mestoToken').status(200).json({ message: USER_MESSAGES.userLogout });
+};
+
 module.exports.getProfileInfo = (req, res, next) => {
   const currentUserId = req.user._id;
   User.findById(currentUserId)

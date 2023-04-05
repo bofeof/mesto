@@ -16,7 +16,6 @@ export default function ImagePopup({ card, isOpen, onClose }) {
     return () => {
       document.removeEventListener('keydown', handleEscClose);
     };
-    
   }, [isOpen, onClose]);
 
   function handleClickOverlay(evt) {

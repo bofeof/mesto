@@ -29,9 +29,10 @@ If you want to create a new user, please, use fake email(for example test@test.c
 ✅ Classic and burger menu, it depends on screen width:
 
 - burger menu (width < 768px);
-- classic menu (width > 768px).  
+- classic menu (width > 768px).
 
-✅ 404 page and button for redirection if something is wrong (with myltiple slashes).
+✅ 404 page and button for redirection if something is wrong (with myltiple slashes).  
+✅ JWT in cookie
 
 🔜 jwt token in cookie (instead of local storage)
 
@@ -49,31 +50,33 @@ Backend:
 
 - Node.js + Express;
 - MongoDb\Mongoose;
-- JWT,
+- JWT in cookie,
 - Nginx
 - pm2
 - Celebrate
 - Winston
 - Letsencrypt
-- Jest\*
+- Jest\* (request testing, backend side)
 
 ## Backend part:
 
-IP prod 51.250.12.246  
-Current prod:  https://api.bofeof.nomoredomains.rocks  
-or 
+IP prod 158.160.55.250  
+Current prod: https://api.bofeof.nomoredomains.rocks  
+or
 Local: http://localhost:3000
 
 #### API
 
 - Url: https://api.bofeof.nomoredomains.rocks or http://localhost:3000
 - headers: {  
-   authorization: "Bearer " + your token,  
-   "Content-Type": "application/json",  
-  }
+    'Content-Type': 'application/json',  
+    'Accept': 'application/json',  
+    'Access-Control-Allow-Credentials': true,  
+  }  
+  'credentials': 'include'
 
 Available endpoints:
-| **Method** | **Endpoint** | **Action** | **Token required ('Bearer ' + jwt)** | **Required body data** |
+| **Method** | **Endpoint** | **Action** | **Auth required** | **Required body data** |
 |------------|------------------|------------------------------------------------------------|--------------------------------------|---------------------------|
 | POST | /signup | Create user | | {email: '', password: ''} |
 | POST | /signin | Log in | | {email: '', password: ''} |
@@ -103,6 +106,7 @@ So, if you don't want to deploy this app locally you can also check frontend par
 ### Settings for frontend (./frontend folder). All comands are located in package.json:
 
 You need to change value of REACT_APP_BASE_URL (frontend/src/utils/constants.js)
+
 - `npm install` Install all dependencies before start.
 - `npm run build` Builds the app for production to the `build` folder.
 - `npm run start` Open [http://localhost:3000](http://localhost:3000) to view it in your browser.

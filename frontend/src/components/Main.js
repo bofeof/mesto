@@ -11,7 +11,11 @@ export default function Main(props) {
     <main className="content">
       <section className="user">
         <div className="user__avatar-container user__avatar-editor" onClick={props.onEditAvatar}>
-          <img className="user__avatar" src={currentUser.avatar || defaultUserAvatar} alt={`Фото пользователя: ${currentUser.name}`} />
+          <img
+            className="user__avatar"
+            src={currentUser.avatar || defaultUserAvatar}
+            alt={`Фото пользователя: ${currentUser.name}`}
+          />
           <div className="user__avatar-overlay">
             <img className="user__avatar-icon" src={userEditInfoIcon} alt="Иконка редактирования аватара" />
           </div>
@@ -32,7 +36,13 @@ export default function Main(props) {
         <ul className="gallery">
           {props.cards.map((card) => {
             return (
-              <Card key={card._id} card={card} onCardClick={props.onCardClick} onCardLike={props.onCardLike} onCardDelete={props.onCardDelete} />
+              <Card
+                key={card._id}
+                card={card}
+                onCardClick={props.onCardClick}
+                onCardLike={props.onCardLike}
+                onCardDelete={props.onCardDelete}
+              />
             );
           })}
         </ul>

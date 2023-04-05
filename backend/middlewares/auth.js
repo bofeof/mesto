@@ -1,25 +1,21 @@
 // check token from request
 const { NODE_ENV, JWT_SECRET } = process.env;
 const jwt = require('jsonwebtoken');
-const { errorAnswers } = require('../utils/constants');
-
+const { ERROR_ANSWERS } = require('../utils/errorAnswers');
+const { DEV_ENV_OPTIONS } = require('../utils/devEnvOptions');
 const { UnauthorizedError } = require('../utils/errorHandler/UnauthorizedError');
 
 module.exports = (req, res, next) => {
-  const { authorization } = req.headers;
-
-  if (!authorization || !authorization.startsWith('Bearer ')) {
-    next(new UnauthorizedError({ message: errorAnswers.authError }));
-    return;
+  const token = req.cookies.mestoToken;
+  if (!token) {
+    next(new UnauthorizedError({ message: ERROR_ANSWERS.authError }));
   }
 
-  const token = authorization.replace('Bearer ', '');
   let payload;
-
   try {
-    payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret');
+    payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : DEV_ENV_OPTIONS.JWT_SECRET);
   } catch (err) {
-    next(new UnauthorizedError({ message: errorAnswers.tokenError }));
+    next(new UnauthorizedError({ message: ERROR_ANSWERS.authError }));
     return;
   }
 

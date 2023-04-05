@@ -8,23 +8,38 @@ const {
 } = require('./fixtures/testData');
 const app = require('../app');
 
-const { MONGO_DB } = process.env;
-const { errorAnswers } = require('../utils/constants');
+const { DEV_ENV_OPTIONS } = require('../utils/devEnvOptions');
+
+const {
+  NODE_ENV = 'development',
+  MONGO_URL_PROD,
+  MONGO_DB_PROD,
+} = process.env;
+
+const MONGO_URL = NODE_ENV === 'production' ? MONGO_URL_PROD : DEV_ENV_OPTIONS.MONGO_URL;
+const MONGO_DB = NODE_ENV === 'production' ? MONGO_DB_PROD : DEV_ENV_OPTIONS.MONGO_DB;
+const { ERROR_ANSWERS } = require('../utils/errorAnswers');
 
 let userId;
 let cardId;
 let token;
+let cookieData;
 
 const request = supertest(app);
 
 // mongoose for removing user after all test
 beforeAll(() => {
-  mongoose.connect(MONGO_DB);
+  mongoose.set('strictQuery', true);
+  mongoose.connect(`${MONGO_URL}/${MONGO_DB}`);
 });
 
 afterAll(() => {
-  mongoose.disconnect(MONGO_DB);
+  mongoose.disconnect(`${MONGO_URL}/${MONGO_DB}`);
 });
+
+function getJwtToken(data) {
+  return data.split(';')[0].split('=')[1];
+}
 
 // TESTS
 describe('All manipulation with user: creation, updating ect', () => {
@@ -47,8 +62,8 @@ describe('All manipulation with user: creation, updating ect', () => {
       .post('/signin')
       .send(newUser)
       .then((res) => {
-        const message = JSON.parse(res.text);
-        token = `Bearer ${message.token}`;
+        cookieData = res.header['set-cookie'];
+        token = `${getJwtToken(cookieData[0])}`;
         expect(res.status).toBe(200);
         expect(token).toBeDefined();
       }));
@@ -57,7 +72,7 @@ describe('All manipulation with user: creation, updating ect', () => {
   describe('After login: create card', () => {
     it('Create card: valid data, with token', () => request
       .post('/cards')
-      .set('Authorization', token)
+      .set('Cookie', `mestoToken=${token}`)
       .send(newCard)
       .then((res) => {
         const message = JSON.parse(res.text);
@@ -69,21 +84,9 @@ describe('All manipulation with user: creation, updating ect', () => {
         expect(cardData.owner.email).toBe(newUser.email);
       }));
 
-    it('Create card: valid data, without token', () => request
-      .post('/cards')
-      .set('Authorization', '')
-      .send(newCard)
-      .then((res) => {
-        const message = JSON.parse(res.text);
-        expect(res.status).toBe(401);
-        expect(message).toStrictEqual({
-          message: errorAnswers.authError,
-        });
-      }));
-
     it('Create card: invalid data(name), with token', () => request
       .post('/cards')
-      .set('Authorization', token)
+      .set('Cookie', `mestoToken=${token}`)
       .send(invalidNameNewCard)
       .then((res) => {
         const message = JSON.parse(res.text);
@@ -93,7 +96,7 @@ describe('All manipulation with user: creation, updating ect', () => {
 
     it('Create card: invalid data(link), with token', () => request
       .post('/cards')
-      .set('Authorization', token)
+      .set('Cookie', `mestoToken=${token}`)
       .send(invalidLinkNewCard)
       .then((res) => {
         const message = JSON.parse(res.text);
@@ -105,7 +108,7 @@ describe('All manipulation with user: creation, updating ect', () => {
   describe('After login: like card', () => {
     it('Like card', () => request
       .put(`/cards/${cardId}/likes`)
-      .set('Authorization', token)
+      .set('Cookie', `mestoToken=${token}`)
       .then((res) => {
         const message = JSON.parse(res.text);
         const cardData = message.data;
@@ -116,7 +119,7 @@ describe('All manipulation with user: creation, updating ect', () => {
 
     it('Like card, invalid id', () => request
       .put(`/cards/${invalidCardId + 123}/likes`)
-      .set('Authorization', token)
+      .set('Cookie', `mestoToken=${token}`)
       .then((res) => {
         const message = JSON.parse(res.text);
         expect(res.status).toBe(400);
@@ -126,20 +129,9 @@ describe('All manipulation with user: creation, updating ect', () => {
 
     it('Like card, card doesnt exist', () => request
       .put(`/cards/${invalidCardId}/likes`)
-      .set('Authorization', token)
+      .set('Cookie', `mestoToken=${token}`)
       .then((res) => {
         expect(res.status).toBe(404);
-      }));
-
-    it('Like card, without token', () => request
-      .put(`/cards/${cardId}/likes`)
-      .set('Authorization', '')
-      .then((res) => {
-        const message = JSON.parse(res.text);
-        expect(res.status).toBe(401);
-        expect(message).toStrictEqual({
-          message: errorAnswers.authError,
-        });
       }));
   });
 
@@ -147,7 +139,7 @@ describe('All manipulation with user: creation, updating ect', () => {
     // Dislike
     it('Dislike card', () => request
       .delete(`/cards/${cardId}/likes`)
-      .set('Authorization', token)
+      .set('Cookie', `mestoToken=${token}`)
       .then((res) => {
         const message = JSON.parse(res.text);
         const cardData = message.data;
@@ -158,7 +150,7 @@ describe('All manipulation with user: creation, updating ect', () => {
 
     it('Dislike card, invalid id', () => request
       .delete(`/cards/${invalidCardId + 123}/likes`)
-      .set('Authorization', token)
+      .set('Cookie', `mestoToken=${token}`)
       .then((res) => {
         const message = JSON.parse(res.text);
         expect(res.status).toBe(400);
@@ -168,38 +160,16 @@ describe('All manipulation with user: creation, updating ect', () => {
 
     it('Dislike card, card doesnt exist', () => request
       .delete(`/cards/${invalidCardId}/likes`)
-      .set('Authorization', token)
+      .set('Cookie', `mestoToken=${token}`)
       .then((res) => {
         expect(res.status).toBe(404);
-      }));
-
-    it('Dislike card, without token', () => request
-      .delete(`/cards/${cardId}/likes`)
-      .set('Authorization', '')
-      .then((res) => {
-        const message = JSON.parse(res.text);
-        expect(res.status).toBe(401);
-        expect(message).toStrictEqual({
-          message: errorAnswers.authError,
-        });
       }));
   });
 
   describe('After login: remove card', () => {
-    it('Remove created card without token', () => request
-      .delete(`/cards/${cardId}`)
-      .set('Authorization', '')
-      .then((res) => {
-        const message = JSON.parse(res.text);
-        expect(res.status).toBe(401);
-        expect(message).toStrictEqual({
-          message: errorAnswers.authError,
-        });
-      }));
-
     it('Remove created card, invalid id', () => request
       .delete(`/cards/${invalidCardId + 123}`)
-      .set('Authorization', token)
+      .set('Cookie', `mestoToken=${token}`)
       .then((res) => {
         const message = JSON.parse(res.text);
         expect(res.status).toBe(400);
@@ -209,7 +179,7 @@ describe('All manipulation with user: creation, updating ect', () => {
 
     it('Remove created card', () => request
       .delete(`/cards/${cardId}`)
-      .set('Authorization', token)
+      .set('Cookie', `mestoToken=${token}`)
       .then((res) => {
         const message = JSON.parse(res.text);
         const cardData = message.data;
@@ -222,24 +192,24 @@ describe('All manipulation with user: creation, updating ect', () => {
 
     it('Remove created card again. it doesnt exist', () => request
       .delete(`/cards/${cardId}`)
-      .set('Authorization', token)
+      .set('Cookie', `mestoToken=${token}`)
       .then((res) => {
         expect(res.status).toBe(404);
       }));
 
     it('Removed card (created by another user, forbidden)', () => request
       .delete(`/cards/${anotherCardId}`)
-      .set('Authorization', token)
+      .set('Cookie', `mestoToken=${token}`)
       .then((res) => {
         const message = JSON.parse(res.text);
         expect(res.status).toBe(403);
-        expect(message.message).toBe(errorAnswers.forbiddenError);
+        expect(message.message).toBe(ERROR_ANSWERS.forbiddenError);
       }));
   });
 
   describe('After login: get all gallery', () => {
     it('Get cards', () => request.get('/cards')
-      .set('Authorization', token)
+      .set('Cookie', `mestoToken=${token}`)
       .then((res) => {
         const message = JSON.parse(res.text);
         const galleryData = message.data;

@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
 
-import { API } from '../utils/API.js';
-import { register, login, checkToken } from '../utils/userAuth.js';
-import { configAPI } from '../utils/constants.js';
+import MainAPI from '../utils/MainAPI.js';
+import UserAuthAPI from '../utils/UserAuthAPI.js';
+import { CONFIG_API } from '../utils/requestConstants.js';
+import clearLocalStorage from '../utils/clearLocalStorage.js';
 
 import Header from '../components/Header';
 import Main from '../components/Main';
@@ -24,7 +25,8 @@ import { CurrentUserContext, LoggedInContext } from '../contexts/CurrentUserCont
 
 export default function App() {
   const history = useHistory();
-  const api = new API(configAPI);
+  const mainAPI = new MainAPI(CONFIG_API);
+  const userAuthAPI = new UserAuthAPI(CONFIG_API);
 
   const [loggedIn, setLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
@@ -51,41 +53,46 @@ export default function App() {
   // status for info-popup (api requests: login, register)
   const [isSuccessful, setIsSuccessful] = useState(false);
 
+  function showPopUpError() {
+    setIsSuccessful(false);
+    setIsInfoPopupOpen(true);
+  }
+
   // first run: check login, get data about gallery and user
   useEffect(() => {
     // check login
-    if (localStorage.getItem('mestoToken')) {
-      checkToken(localStorage.getItem('mestoToken'))
-        .then((res) => {
-          // if jwt secret key is changed by dev while user has active session
-          if(!res || !res.data){
-            localStorage.clear();
-            setLoggedIn(false);
-            history.push('/sign-in');
-            return
-          }
-          setLoginId(() => res.data._id);
-          setLoginEmail(() => res.data.email);
-          setLoggedIn(true);
 
-          if(loggedIn && ['', '/', '/sign-in', 'sign-up'].includes(history.location.pathname)){
-            history.push('/');
-          }
-
-          // get data about user, gallery
-          Promise.all([api.getGalleryData(), api.getUserData()])
-            .then(([cardsData, userData]) => {
-              setCurrentUser(userData.data);
-              setCards(cardsData.data);
-            })
-            .catch((err) => console.log(`Ошибка: ${err}`));
-        })
-        .catch((err) => {
-          localStorage.removeItem('mestoToken');
+    userAuthAPI
+      .checkCurrentUser()
+      .then((res) => {
+        // if jwt secret key is changed by dev while user has active session
+        if (!res || !res.data) {
+          clearLocalStorage();
           setLoggedIn(false);
-          console.log(err);
-        });
-    }
+          history.push('/sign-in');
+          return;
+        }
+
+        setLoginId(() => res.data._id);
+        setLoginEmail(() => res.data.email);
+        setLoggedIn(true);
+
+        if (loggedIn && ['', '/', '/sign-in', 'sign-up'].includes(history.location.pathname)) {
+          history.push('/');
+        }
+
+        // get data about user, gallery
+        Promise.all([mainAPI.getGalleryData(), mainAPI.getUserData()])
+          .then(([cardsData, userData]) => {
+            setCurrentUser(userData.data);
+            setCards(cardsData.data);
+          })
+          .catch((err) => console.log(`Ошибка: ${err.message}`));
+      })
+      .catch((err) => {
+        setLoggedIn(false);
+        console.log(err.message);
+      });
   }, [loggedIn]);
 
   function handleEditProfileClick() {
@@ -107,12 +114,12 @@ export default function App() {
 
   function handleCardLike(card) {
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
-    api
+    mainAPI
       .changeLikeCardStatus(card._id, isLiked)
       .then((newCard) => {
         setCards((prevStateCards) => prevStateCards.map((c) => (c._id === card._id ? newCard.data : c)));
       })
-      .catch((err) => console.log(`Ошибка: ${err}`));
+      .catch((err) => console.log(`Ошибка: ${err.message}`));
   }
 
   // before removing card
@@ -122,15 +129,16 @@ export default function App() {
   }
 
   function handleUserLogin(userLoginData) {
-    login(userLoginData)
+    userAuthAPI
+      .login(userLoginData)
       .then((res) => {
-        if (res.token) {
-          localStorage.setItem('mestoToken', res.token);
-          checkToken(localStorage.getItem('mestoToken'))
-            .then((res) => {
+        if (res.message === 'Пользователь зашел в аккаунт') {
+          userAuthAPI
+            .checkCurrentUser()
+            .then((userData) => {
               // set user Login Data (id, email)
-              setLoginId(() => res.data._id);
-              setLoginEmail(() => res.data.email);
+              setLoginId(() => userData.data._id);
+              setLoginEmail(() => userData.data.email);
 
               // set res to localstorage
               localStorage.setItem('mestoUserId', loginId);
@@ -139,54 +147,58 @@ export default function App() {
               setLoggedIn(true);
               history.push('/');
             })
-            .catch((err) => console.log(err));
+            .catch((err) => console.log(err.message));
         } else {
-          setLoggedIn(false);
-          setIsSuccessful(false);
-          setIsInfoPopupOpen(true);
+          throw new Error({ message: 'Необходима авторизация' });
         }
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err.message);
         setLoggedIn(false);
-        setIsSuccessful(false);
-        setIsInfoPopupOpen(true);
+        showPopUpError();
       });
   }
 
   function handleUserRegister(userRegisterData) {
-    register(userRegisterData)
+    userAuthAPI
+      .register(userRegisterData)
       .then((res) => {
         if (res.data) {
           setIsSuccessful(true);
           setIsInfoPopupOpen(true);
           history.push('/sign-in');
         } else {
-          setIsSuccessful(false);
-          setIsInfoPopupOpen(true);
+          showPopUpError();
         }
       })
-      .catch(() => {
-        setIsSuccessful(false);
-        setIsInfoPopupOpen(true);
+      .catch((err) => {
+        console.log(err.message);
+        showPopUpError();
       });
   }
 
   function handleUserLogout() {
-    localStorage.removeItem('mestoUserId');
-    localStorage.removeItem('mestoUserEmail');
-    localStorage.removeItem('mestoToken');
-    setLoggedIn(false);
-    history.push('/sign-in');
+    userAuthAPI
+      .logout()
+      .then((res) => {
+        clearLocalStorage();
+        setLoggedIn(false);
+        history.push('/sign-in');
+      })
+      .catch((err) => {
+        console.log(err.message);
+        showPopUpError();
+      });
   }
 
   function onCardRemove() {
     setBtnTextConfirm(() => 'Удаление...');
-    api
+    mainAPI
       .removePhotoCard(cardForRemove._id)
       .then(() => {
         setCards((prevGallery) => prevGallery.filter((prevCard) => prevCard._id !== cardForRemove._id));
       })
-      .catch((err) => console.log(`Ошибка: ${err}`))
+      .catch((err) => console.log(`Ошибка: ${err.message}`))
       .finally(() => setBtnTextConfirm(() => 'Да'));
   }
 
@@ -206,23 +218,23 @@ export default function App() {
 
   function onUserUpdate(userData) {
     setBtnTextUserSubmit(() => 'Сохранение...');
-    api
+    mainAPI
       .setUserData(userData)
       .then((userData) => {
         setCurrentUser(userData.data);
       })
-      .catch((err) => console.log(`Ошибка: ${err}`))
+      .catch((err) => console.log(`Ошибка: ${err.message}`))
       .finally(() => setBtnTextUserSubmit(() => 'Cохранить'));
   }
 
   function onAvatarUpdate(avatarLink) {
     setBtnTextAvatarSubmit(() => 'Сохранение...');
-    api
+    mainAPI
       .changeUserAvatar(avatarLink)
       .then((userData) => {
         setCurrentUser(userData.data);
       })
-      .catch((err) => console.log(`Ошибка: ${err}`))
+      .catch((err) => console.log(`Ошибка: ${err.message}`))
       .finally(() => setBtnTextAvatarSubmit(() => 'Cохранить'));
   }
 
@@ -230,14 +242,14 @@ export default function App() {
     setBtnTextCardSubmit(() => {
       return 'Создание...';
     });
-    api
+    mainAPI
       .addPhotoCard(cardData)
       .then((newCard) => {
         setCards((prevCards) => {
           return [newCard.data, ...prevCards];
         });
       })
-      .catch((err) => console.log(`Ошибка: ${err}`))
+      .catch((err) => console.log(`Ошибка: ${err.message}`))
       .finally(() => setBtnTextCardSubmit(() => 'Создать'));
   }
 
@@ -273,18 +285,32 @@ export default function App() {
             </Route>
 
             <Route path="*">
-              <PageNotFound history={history}/>
+              <PageNotFound history={history} />
             </Route>
 
             <Route>{loggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}</Route>
-
           </Switch>
 
-          <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onSubmit={onUserUpdate} buttonSubmitName={btnTextUserSubmit} />
+          <EditProfilePopup
+            isOpen={isEditProfilePopupOpen}
+            onClose={closeAllPopups}
+            onSubmit={onUserUpdate}
+            buttonSubmitName={btnTextUserSubmit}
+          />
 
-          <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onSubmit={onAvatarUpdate} buttonSubmitName={btnTextAvatarSubmit} />
+          <EditAvatarPopup
+            isOpen={isEditAvatarPopupOpen}
+            onClose={closeAllPopups}
+            onSubmit={onAvatarUpdate}
+            buttonSubmitName={btnTextAvatarSubmit}
+          />
 
-          <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onSubmit={onCardCreate} buttonSubmitName={btnTextCardSubmit} />
+          <AddPlacePopup
+            isOpen={isAddPlacePopupOpen}
+            onClose={closeAllPopups}
+            onSubmit={onCardCreate}
+            buttonSubmitName={btnTextCardSubmit}
+          />
 
           <ImagePopup card={selectedCard} isOpen={isCardZoomPopupOpen} onClose={closeAllPopups} />
 

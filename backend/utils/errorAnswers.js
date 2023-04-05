@@ -1,7 +1,8 @@
 // messages for user
-const errorAnswers = {
+const ERROR_ANSWERS = {
   userIdError: 'Невозможно найти пользователя, не существует в базе',
   userExistsError: 'Невозможно зарегистрировать пользователя: email уже использовался для регистрации',
+  cardIdError: 'Невозможно найти карточку по id',
   removingCardError: 'Карточка с заданными параметрами не найдена в базе. Невозможно удалить карточку.',
   settingLikeError: 'Карточка с заданными параметрами не найдена в базе. Невозможно поставить лайк.',
   removingLikeError: 'Карточка с заданными параметрами не найдена в базе. Невозможно снять лайк',
@@ -11,7 +12,5 @@ const errorAnswers = {
   forbiddenError: 'Недостаточно прав для совершения действия',
   wrongEmailPassword: 'Невозможно войти в Mesto: введены неверные почта и пароль',
 };
-const logFile = 'logs/Logs.log';
 
-module.exports.errorAnswers = errorAnswers;
-module.exports.logFile = logFile;
+module.exports.ERROR_ANSWERS = ERROR_ANSWERS;

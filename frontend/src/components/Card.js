@@ -20,7 +20,12 @@ export default function Card({ card, onCardClick, onCardLike, onCardDelete }) {
 
   return (
     <li className="gallery__item">
-      <button type="button" className="gallery__remove-button" style={{ display: isOwnCard ? 'block' : 'none' }} onClick={handleCardDelete}></button>
+      <button
+        type="button"
+        className="gallery__remove-button"
+        style={{ display: isOwnCard ? 'block' : 'none' }}
+        onClick={handleCardDelete}
+      ></button>
       <img className="gallery__item-photo" src={card.link} alt={card.name} onClick={handleZoomClick} />
       <div className="gallery__item-description">
         <h2 className="gallery__item-name">{card.name}</h2>

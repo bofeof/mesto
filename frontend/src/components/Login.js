@@ -5,5 +5,12 @@ export default function Login({ onUserLogin }) {
     onUserLogin(userLoginData);
   }
 
-  return <IdentityForm header="Вход" buttonName="Войти" onClick={handleSignIn} askSignIn={<p className="identity__signin-ask"></p>} />;
+  return (
+    <IdentityForm
+      header="Вход"
+      buttonName="Войти"
+      onClick={handleSignIn}
+      askSignIn={<p className="identity__signin-ask"></p>}
+    />
+  );
 }
