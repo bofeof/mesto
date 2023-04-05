@@ -20,7 +20,7 @@ export default class UserAuthAPI {
   }
 
   login(userData) {
-    return fetch(`http://localhost:3003/signin`, {
+    return fetch(`${this._configAPI.mestoUrl}/signin`, {
       method: 'POST',
       headers: this._configAPI.headers,
       body: JSON.stringify(userData),
