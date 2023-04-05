@@ -147,7 +147,11 @@ export default function App() {
               setLoggedIn(true);
               history.push('/');
             })
-            .catch((err) => console.log(err.message));
+            .catch((err) => {
+              console.log(err.message);
+              setLoggedIn(false);
+              showPopUpError();
+            });
         } else {
           throw new Error({ message: 'Необходима авторизация' });
         }
