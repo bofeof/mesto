@@ -21,11 +21,11 @@ const { uncaughtExceptionHandler } = require('./utils/errorHandler/uncaughtExcep
 
 const app = express();
 
+app.use(cookieParser());
+
 process.on('uncaughtException', uncaughtExceptionHandler);
 
 app.use(cors(CORS_OPTIONS));
-
-app.use(cookieParser());
 
 app.use(requestLogger);
 

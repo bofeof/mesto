@@ -122,7 +122,6 @@ module.exports.login = (req, res, next) => {
           secure: process.env.NODE_ENV === 'production',
           maxAge: 3600000 * 24 * 7,
         })
-        .status(200)
         .json({ message: USER_MESSAGES.userLogin });
     })
     .catch((err) => {

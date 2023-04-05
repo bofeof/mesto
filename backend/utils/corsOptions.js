@@ -1,6 +1,8 @@
-module.exports.CORS_OPTIONS = {
+const CORS_OPTIONS = {
   origin: true,
   credentials: true,
   optionsSuccessStatus: 200,
   methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'PATCH'],
 };
+
+module.exports = CORS_OPTIONS;
