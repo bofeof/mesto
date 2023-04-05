@@ -5,16 +5,14 @@ export default class MainAPI {
 
   /**  get response from all request */
   _getResponse(res) {
-    return res.ok
-      ? res.json()
-      : Promise.reject(`Ошибка: ${res.status}, ${res.statusText}`);
+    return res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}, ${res.statusText}`);
   }
 
   /** USER */
   /** {name, about, avatar, _id} */
   getUserData() {
     return fetch(`${this._configAPI.mestoUrl}/users/me`, {
-      method: "GET",
+      method: 'GET',
       headers: this._configAPI.headers,
       credentials: this._configAPI.credentials,
     }).then((res) => this._getResponse(res));
@@ -24,7 +22,7 @@ export default class MainAPI {
       response => get new user-info **/
   setUserData(userData) {
     return fetch(`${this._configAPI.mestoUrl}/users/me`, {
-      method: "PATCH",
+      method: 'PATCH',
       headers: this._configAPI.headers,
       credentials: this._configAPI.credentials,
       body: JSON.stringify({
@@ -36,7 +34,7 @@ export default class MainAPI {
 
   changeUserAvatar(userData) {
     return fetch(`${this._configAPI.mestoUrl}/users/me/avatar`, {
-      method: "PATCH",
+      method: 'PATCH',
       headers: this._configAPI.headers,
       credentials: this._configAPI.credentials,
       body: JSON.stringify({
@@ -49,7 +47,7 @@ export default class MainAPI {
   /** get current cards data from server */
   getGalleryData() {
     return fetch(`${this._configAPI.mestoUrl}/cards`, {
-      method: "GET",
+      method: 'GET',
       headers: this._configAPI.headers,
       credentials: this._configAPI.credentials,
     }).then((res) => this._getResponse(res));
@@ -58,7 +56,7 @@ export default class MainAPI {
   /**  response -> get data of created card */
   addPhotoCard(cardData) {
     return fetch(`${this._configAPI.mestoUrl}/cards/`, {
-      method: "POST",
+      method: 'POST',
       headers: this._configAPI.headers,
       credentials: this._configAPI.credentials,
       body: JSON.stringify({
@@ -70,21 +68,19 @@ export default class MainAPI {
 
   removePhotoCard(photoCardId) {
     return fetch(`${this._configAPI.mestoUrl}/cards/${photoCardId}`, {
-      method: "DELETE",
+      method: 'DELETE',
       headers: this._configAPI.headers,
       credentials: this._configAPI.credentials,
     }).then((res) => this._getResponse(res));
   }
 
   changeLikeCardStatus(photoCardId, isLiked) {
-    return isLiked
-      ? this._removePhotoLike(photoCardId)
-      : this._addPhotoLike(photoCardId);
+    return isLiked ? this._removePhotoLike(photoCardId) : this._addPhotoLike(photoCardId);
   }
 
   _addPhotoLike(photoCardId) {
     return fetch(`${this._configAPI.mestoUrl}/cards/${photoCardId}/likes`, {
-      method: "PUT",
+      method: 'PUT',
       headers: this._configAPI.headers,
       credentials: this._configAPI.credentials,
     }).then((res) => this._getResponse(res));
@@ -92,7 +88,7 @@ export default class MainAPI {
 
   _removePhotoLike(photoCardId) {
     return fetch(`${this._configAPI.mestoUrl}/cards/${photoCardId}/likes`, {
-      method: "DELETE",
+      method: 'DELETE',
       headers: this._configAPI.headers,
       credentials: this._configAPI.credentials,
     }).then((res) => this._getResponse(res));

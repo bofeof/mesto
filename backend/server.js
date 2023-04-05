@@ -9,10 +9,7 @@ const { DEV_ENV_OPTIONS } = require('./utils/devEnvOptions');
 const app = require('./app');
 
 const {
-  NODE_ENV = 'development',
-  MONGO_URL_PROD,
-  MONGO_DB_PROD,
-  PORT_PROD,
+  NODE_ENV = 'development', MONGO_URL_PROD, MONGO_DB_PROD, PORT_PROD,
 } = process.env;
 
 const PORT = NODE_ENV === 'production' ? PORT_PROD : DEV_ENV_OPTIONS.PORT;

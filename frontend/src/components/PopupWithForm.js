@@ -16,7 +16,6 @@ export default function PopupWithForm(props) {
     return () => {
       document.removeEventListener('keydown', handleEscClose);
     };
-    
   }, [props.isOpen, props.onClose, props]);
 
   function handleClickOverlay(evt) {
@@ -30,7 +29,10 @@ export default function PopupWithForm(props) {
   }
 
   return (
-    <div className={`popup popup_type_${props.name} ${props.isOpen ? 'popup_opened' : ''}`} onClick={handleClickOverlay}>
+    <div
+      className={`popup popup_type_${props.name} ${props.isOpen ? 'popup_opened' : ''}`}
+      onClick={handleClickOverlay}
+    >
       <div className="popup__container">
         <button type="button" className="popup__close-button" onClick={props.onClose}></button>
         <div className="popup__form">
@@ -41,7 +43,9 @@ export default function PopupWithForm(props) {
             {props.children}
 
             <button
-              className={`popup__button popup__submit-button popup__save-button ${!props.isButtonEnable ? 'popup__button_disabled' : ''}`}
+              className={`popup__button popup__submit-button popup__save-button ${
+                !props.isButtonEnable ? 'popup__button_disabled' : ''
+              }`}
               type="submit"
               name="save"
               disabled={!props.isButtonEnable}

@@ -1,6 +1,6 @@
 import { LoggedInContext } from '../contexts/CurrentUserContext';
 import { useContext, useEffect, useState } from 'react';
-import { useLocation} from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 export default function Header({ onLogOut, loginEmail, history }) {
   const [menuOpened, setMenuOpened] = useState(false);
@@ -82,7 +82,6 @@ export default function Header({ onLogOut, loginEmail, history }) {
             </button>
             <div className="header__menu-border"></div>
           </div>
-          
         </>
       )}
     </header>

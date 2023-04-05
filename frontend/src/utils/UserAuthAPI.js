@@ -7,15 +7,13 @@ export default class UserAuthAPI {
     if (res.ok) {
       return res.json();
     }
-    const userMessage = await res
-      .json()
-      .then((errText) => errText.message || "");
+    const userMessage = await res.json().then((errText) => errText.message || '');
     return Promise.reject(new Error(`Ошибка: ${res.status}. ${userMessage}`));
   }
 
   register(userData) {
     return fetch(`${this._configAPI.mestoUrl}/signup`, {
-      method: "POST",
+      method: 'POST',
       headers: this._configAPI.headers,
       body: JSON.stringify(userData),
     }).then((res) => this._getResponse(res));
@@ -27,12 +25,12 @@ export default class UserAuthAPI {
       headers: this._configAPI.headers,
       body: JSON.stringify(userData),
       credentials: this._configAPI.credentials,
-    }).then((res) => this._getResponse(res))
+    }).then((res) => this._getResponse(res));
   }
 
   logout() {
     return fetch(`${this._configAPI.mestoUrl}/signout`, {
-      method: "POST",
+      method: 'POST',
       headers: this._configAPI.headers,
       credentials: this._configAPI.credentials,
     }).then((res) => this._getResponse(res));
@@ -40,7 +38,7 @@ export default class UserAuthAPI {
 
   checkCurrentUser() {
     return fetch(`${this._configAPI.mestoUrl}/users/me`, {
-      method: "GET",
+      method: 'GET',
       headers: this._configAPI.headers,
       credentials: this._configAPI.credentials,
     }).then((res) => this._getResponse(res));

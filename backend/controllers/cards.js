@@ -19,7 +19,8 @@ module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner })
     .then((card) => {
-      Card.findById(card._id).populate(['owner', 'likes'])
+      Card.findById(card._id)
+        .populate(['owner', 'likes'])
         .then((data) => {
           if (!data) {
             next(new NotFoundError({ message: ERROR_ANSWERS.cardIdError }));
