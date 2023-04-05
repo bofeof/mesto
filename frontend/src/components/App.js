@@ -53,6 +53,11 @@ export default function App() {
   // status for info-popup (api requests: login, register)
   const [isSuccessful, setIsSuccessful] = useState(false);
 
+  function showPopUpError() {
+    setIsSuccessful(false);
+    setIsInfoPopupOpen(true);
+  }
+
   // first run: check login, get data about gallery and user
   useEffect(() => {
     // check login
@@ -82,11 +87,11 @@ export default function App() {
             setCurrentUser(userData.data);
             setCards(cardsData.data);
           })
-          .catch((err) => console.log(`Ошибка: ${err}`));
+          .catch((err) => console.log(`Ошибка: ${err.message}`));
       })
       .catch((err) => {
         setLoggedIn(false);
-        console.log(err);
+        console.log(err.message);
       });
   }, [loggedIn]);
 
@@ -114,7 +119,7 @@ export default function App() {
       .then((newCard) => {
         setCards((prevStateCards) => prevStateCards.map((c) => (c._id === card._id ? newCard.data : c)));
       })
-      .catch((err) => console.log(`Ошибка: ${err}`));
+      .catch((err) => console.log(`Ошибка: ${err.message}`));
   }
 
   // before removing card
@@ -142,15 +147,15 @@ export default function App() {
               setLoggedIn(true);
               history.push('/');
             })
-            .catch((err) => console.log(err));
+            .catch((err) => console.log(err.message));
         } else {
-          throw new Error('Необходима авторизация');
+          throw new Error({ message: 'Необходима авторизация' });
         }
       })
       .catch((err) => {
+        console.log(err.message);
         setLoggedIn(false);
-        setIsSuccessful(false);
-        setIsInfoPopupOpen(true);
+        showPopUpError();
       });
   }
 
@@ -163,14 +168,12 @@ export default function App() {
           setIsInfoPopupOpen(true);
           history.push('/sign-in');
         } else {
-          setIsSuccessful(false);
-          setIsInfoPopupOpen(true);
+          showPopUpError();
         }
       })
       .catch((err) => {
-        console.log(err);
-        setIsSuccessful(false);
-        setIsInfoPopupOpen(true);
+        console.log(err.message);
+        showPopUpError();
       });
   }
 
@@ -183,9 +186,8 @@ export default function App() {
         history.push('/sign-in');
       })
       .catch((err) => {
-        console.log(err);
-        setIsSuccessful(false);
-        setIsInfoPopupOpen(true);
+        console.log(err.message);
+        showPopUpError();
       });
   }
 
@@ -196,7 +198,7 @@ export default function App() {
       .then(() => {
         setCards((prevGallery) => prevGallery.filter((prevCard) => prevCard._id !== cardForRemove._id));
       })
-      .catch((err) => console.log(`Ошибка: ${err}`))
+      .catch((err) => console.log(`Ошибка: ${err.message}`))
       .finally(() => setBtnTextConfirm(() => 'Да'));
   }
 
@@ -221,7 +223,7 @@ export default function App() {
       .then((userData) => {
         setCurrentUser(userData.data);
       })
-      .catch((err) => console.log(`Ошибка: ${err}`))
+      .catch((err) => console.log(`Ошибка: ${err.message}`))
       .finally(() => setBtnTextUserSubmit(() => 'Cохранить'));
   }
 
@@ -232,7 +234,7 @@ export default function App() {
       .then((userData) => {
         setCurrentUser(userData.data);
       })
-      .catch((err) => console.log(`Ошибка: ${err}`))
+      .catch((err) => console.log(`Ошибка: ${err.message}`))
       .finally(() => setBtnTextAvatarSubmit(() => 'Cохранить'));
   }
 
@@ -247,7 +249,7 @@ export default function App() {
           return [newCard.data, ...prevCards];
         });
       })
-      .catch((err) => console.log(`Ошибка: ${err}`))
+      .catch((err) => console.log(`Ошибка: ${err.message}`))
       .finally(() => setBtnTextCardSubmit(() => 'Создать'));
   }
 
