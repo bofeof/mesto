@@ -31,10 +31,8 @@ If you want to create a new user, please, use fake email(for example test@test.c
 - burger menu (width < 768px);
 - classic menu (width > 768px).
 
-✅ 404 page and button for redirection if something is wrong (with myltiple slashes).  
+✅ 404 page and button for redirection if something is wrong (with multiple slashes).  
 ✅ JWT in cookie
-
-🔜 jwt token in cookie (instead of local storage)
 
 ❔🔜 Muiltilanguage support.
 
@@ -69,9 +67,9 @@ Local: http://localhost:3000
 
 - Url: https://api.bofeof.nomoredomains.rocks or http://localhost:3000
 - headers: {  
-    'Content-Type': 'application/json',  
-    'Accept': 'application/json',  
-    'Access-Control-Allow-Credentials': true,  
+   'Content-Type': 'application/json',  
+   'Accept': 'application/json',  
+   'Access-Control-Allow-Credentials': true,  
   }  
   'credentials': 'include'
 

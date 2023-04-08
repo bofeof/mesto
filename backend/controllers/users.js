@@ -36,35 +36,37 @@ module.exports.getUserById = (req, res, next) => {
 
 module.exports.createUser = (req, res, next) => {
   const { password } = req.body;
-  bcrypt.hash(password, 10).then((hash) => User.create({
-    ...req.body,
-    password: hash,
-  })
-    .then((user) => {
-      User.findById(user._id)
-        .then((newUser) => {
-          res.send({ data: newUser });
-        })
-        .catch((err) => {
-          next(err);
-        });
+  bcrypt.hash(password, 10).then((hash) =>
+    User.create({
+      ...req.body,
+      password: hash,
     })
-    .catch((err) => {
-      // check 11000, user already exists
-      if (err.code === 11000) {
-        next(
-          new DublicateDataError({
-            message: ERROR_ANSWERS.userExistsError,
-          }),
-        );
-        return;
-      }
-      if (err.name === 'ValidationError') {
-        next(new ValidationError({ message: err.message }));
-        return;
-      }
-      next(err);
-    }));
+      .then((user) => {
+        User.findById(user._id)
+          .then((newUser) => {
+            res.send({ data: newUser });
+          })
+          .catch((err) => {
+            next(err);
+          });
+      })
+      .catch((err) => {
+        // check 11000, user already exists
+        if (err.code === 11000) {
+          next(
+            new DublicateDataError({
+              message: ERROR_ANSWERS.userExistsError,
+            })
+          );
+          return;
+        }
+        if (err.name === 'ValidationError') {
+          next(new ValidationError({ message: err.message }));
+          return;
+        }
+        next(err);
+      })
+  );
 };
 
 module.exports.updateProfile = (req, res, next) => {
@@ -77,7 +79,7 @@ module.exports.updateProfile = (req, res, next) => {
       new: true,
       runValidators: true,
       upsert: false,
-    },
+    }
   )
     .then((user) => res.send({ data: user }))
     .catch((err) => {
@@ -95,7 +97,7 @@ module.exports.updateAvatar = (req, res, next) => {
       new: true,
       runValidators: true,
       upsert: false,
-    },
+    }
   )
     .then((user) => res.send({ data: user }))
     .catch((err) => {
@@ -118,7 +120,7 @@ module.exports.login = (req, res, next) => {
       res
         .cookie('mestoToken', token, {
           httpOnly: process.env.NODE_ENV === 'production',
-          sameSite: true,
+          sameSite: 'none',
           secure: process.env.NODE_ENV === 'production',
           maxAge: 3600000 * 24 * 7,
         })
@@ -130,7 +132,14 @@ module.exports.login = (req, res, next) => {
 };
 
 module.exports.logout = (req, res) => {
-  res.clearCookie('mestoToken').status(200).json({ message: USER_MESSAGES.userLogout });
+  res
+    .clearCookie('mestoToken', {
+      httpOnly: process.env.NODE_ENV === 'production',
+      sameSite: 'none',
+      secure: process.env.NODE_ENV === 'production',
+    })
+    .status(200)
+    .json({ message: USER_MESSAGES.userLogout });
 };
 
 module.exports.getProfileInfo = (req, res, next) => {
