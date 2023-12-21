@@ -1,11 +1,9 @@
 # Mesto
 
 [Mesto](https://bofeof.nomoredomains.club) is a type of Instagram prototype.  
-If https://bofeof.nomoredomains.club (hosting probably expired) is not available you can also check another deployment [Mesto frontend](https://bofeof.github.io/react-mesto-auth) or run Mesto locally.
+If https://bofeof.nomoredomains.club (hosting probably expired) is not available you can also run Mesto locally.  
 
-This project includes [frontend](https://github.com/bofeof/react-mesto-auth) and [backend](https://github.com/bofeof/express-mesto-gha) parts and it's deployed and developed to practice programming skills.
-
-Demo [Demo of Mesto](https://github.com/bofeof/react-mesto-api-full/issues/5)
+[Demo of Mesto](https://github.com/bofeof/react-mesto-api-full/issues/5)
 
 If you want to create a new user, please, use fake email(for example test@test.com)
 
